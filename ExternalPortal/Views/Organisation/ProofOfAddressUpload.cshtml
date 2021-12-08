@@ -1,0 +1,47 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model PortalViewModel<Ofgem.API.GGSS.Domain.Models.OrganisationModel>
+
+@{
+    ViewData["Title"] = "Provide a proof of address";
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var formError = String.IsNullOrEmpty(Model.Model.Value.Error) ? "" : "govuk-form-group--error";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form action="/organisation/proof-of-address-upload" method="post" enctype="multipart/form-data">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <div>
+                        <h1 class="govuk-fieldset__heading">
+                            Give us evidence of your home address
+                        </h1>
+                        <p>This could be from a council tax or utility bill. This evidence must be dated within the last 3 months.</p>
+                        <p>Because of the responsibility of this role, we need your home address to verify your identity.</p>
+                        <p>You can only upload PDF, JPG, PNG, BMP, TIF, XLS or XLSX files. No file can be larger than 5MB.</p>
+                        <div class="govuk-form-group @formError">
+                            @{
+                                if (!String.IsNullOrEmpty(Model.Model.Value.Error))
+                                {
+                                    <span id="transport-upload-error" class="govuk-error-message">
+                                        @Model.Model.Value.Error
+                                    </span>
+                                }
+                            }
+                            <label class="govuk-label" for="file">
+                                Upload a file
+                            </label>
+                            <input class="govuk-file-upload" id="file" name="file" type="file">
+                        </div>
+                    </div>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel {Text = "Continue", Type = "Submit"})
+                    </div>
+                </legend>
+            </fieldset>
+        </form>
+    </div>
+</div>

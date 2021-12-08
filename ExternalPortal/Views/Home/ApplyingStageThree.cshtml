@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Applying stage 3 - Home - Green Gas Support Scheme";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Applying for stage 3
+        </h1>
+
+        <p>
+            At stage 3, you’ll need to provide the evidence we require, as set out in the <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/guidance-resource" target="_blank">guidance (opens in a new tab)</a>. This will include:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                organisation details
+            </li>
+            <li>
+                costs associated with the biomethane installation
+            </li>
+            <li>
+                network entry agreement
+            </li>
+            <li>
+                evidence to show that the equipment used to produce biomethane has been commissioned
+            </li>
+            <li>
+                environmental permit(s) - or evidence that this is not required
+            </li>
+            <li>
+                waste management permit(s)
+            </li>
+            <li>
+                feedstock details
+            </li>
+            <li>
+                fuel measurement and sampling questionnaire – this has details of the feedstocks to be used and how they’ll be reported
+            </li>
+            <li>
+                metering details
+            </li>
+        </ul>
+
+        <p>
+            We’ll assess the registration application and evidence provided to determine whether the eligibility criteria have been met. We may ask you for more information.
+        </p>
+
+        <p>
+            If we’re satisfied you’ve met all the requirements for registration on the GGSS, we’ll email you with the reason(s) why.
+        </p>
+
+        <p>
+            If we’re not satisfied you’ve met all the requirements for registration on the GGSS, we’ll email you with the reason(s) why.
+        </p>
+
+        <p>
+            At the end of stage 3, if you’re successfully registered, we’ll give a notice of registration which will include:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                the date of registration
+            </li>
+            <li>
+                the tariff that will apply
+            </li>
+            <li>
+                the process and timings for providing meter readings
+            </li>
+            <li>
+                details of the frequency and timetables for periodic payments
+            </li>
+            <li>
+                the tariff lifetime and tariff end date
+            </li>
+            <li>
+                the ongoing participant obligations
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">
+            Need help?
+        </h2>
+
+        <p>
+            If you have any questions, visit our <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy" target="_blank">website (opens in a new tab)</a> where you'll find additional guidance for the scheme.
+        </p>
+
+        <p>
+            You can also <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/green-gas-support-scheme-and-green-gas-levy-contacts" target="_blank">contact us (opens in a new tab)</a>.
+        </p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+
+</div>

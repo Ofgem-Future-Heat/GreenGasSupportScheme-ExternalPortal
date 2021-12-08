@@ -1,0 +1,47 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Ofgem.API.GGSS.Domain.Enums
+
+@model PortalViewModel<Ofgem.API.GGSS.Domain.Models.OrganisationModel>
+
+
+@{
+    ViewData["Title"] = "Choose an organisation type";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+@using (Html.BeginForm("ChooseType", "Organisation", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div>
+                <div class="govuk-form-group">
+                    @await Html.GovUkRadiosFor(m => m.Model.Value.Type,
+                    new FieldsetViewModel
+                    {
+                        Legend = new LegendViewModel
+                        {
+                            Text = "Choose an organisation type",
+                            Classes = "govuk-fieldset__legend govuk-fieldset__legend--l"
+                            ,IsPageHeading = true
+                        }
+                    },
+                    radioHints: new Dictionary<OrganisationType, HintViewModel>
+                    {
+                        { OrganisationType.Private, new HintViewModel { Text="This is a company which is registered at Companies House." } },
+                        { OrganisationType.Other, new HintViewModel { Text="This is a private individual or organisation which is not registered at Companies House." } }
+                    }
+                    )
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.ReturnUrl)
+}

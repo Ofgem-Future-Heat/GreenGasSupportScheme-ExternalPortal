@@ -1,0 +1,76 @@
+﻿@using GovUkDesignSystem.GovUkDesignSystemComponents
+@*TODO : THIS DEFAULT LAYOUT FILE CAN BE REMOVED ONCE THE NEW LAYOUT IMPLEMENTATION IS PROVEN TO BE OKAY! LEFT IT IN FOR NOW IN CASE NEED TO SWITCH BACK*@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Green Gas Support Scheme</title>
+    <link rel="stylesheet" href="~/css/step-by-step-nav.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://www.ofgem.gov.uk/themes/custom/numiko/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.ofgem.gov.uk/themes/custom/numiko/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://www.ofgem.gov.uk/themes/custom/numiko/favicons/favicon-16x16.png">
+  
+</head>
+<body class="govuk-template__body">
+
+    <header class="govuk-header" role="banner">
+        <div class="govuk-header__container govuk-width-container">
+            <div class="govuk-header__logo">
+                <img src="~/images/logo.png" class="govuk-header__logo-image" alt="Ofgem logo" />
+            </div>
+            <div class="govuk-header__content govuk-header__navigation">
+                <nav>
+                    <a href="/" class="govuk-header__link govuk-header__link--service-name">
+                        Green Gas Support Scheme
+                    </a>
+                    <partial name="_LoginPartial" />
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    @{
+        await Html.RenderPartialAsync("_PhaseBannerPartial");
+    }
+        
+
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="govuk-footer">
+        <div class="govuk-width-container">
+            <div class="govuk-footer__meta">
+                <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+                    <h2 class="govuk-visually-hidden">Ofgem links</h2>
+                    <ul class="govuk-footer__inline-list">
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="https://www.ofgem.gov.uk">
+                                Main Ofgem Website
+                            </a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <!-- TODO-2753 work out proper privacy policy link -->
+                            <a class="govuk-footer__link" href="/">
+                                Privacy policy
+                            </a>
+                        </li>
+                    </ul>
+                    <div>&copy; Ofgem 2021</div>
+                    @Html.HiddenFor(v => AppVersionService.Version)
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/all.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/step-by-step-nav.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

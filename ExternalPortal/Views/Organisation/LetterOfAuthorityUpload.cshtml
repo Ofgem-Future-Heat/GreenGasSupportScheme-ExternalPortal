@@ -1,0 +1,67 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model PortalViewModel<Ofgem.API.GGSS.Domain.Models.OrganisationModel>
+
+@{
+    ViewData["Title"] = "Letter of authorisation";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var formError = String.IsNullOrEmpty(Model.Model.Value.Error) ? "" : "govuk-form-group--error";
+}
+
+@using (Html.BeginForm("LetterOfAuthorityUpload", "Organisation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        Give us a letter of authorisation
+                    </h1>
+                </legend>
+
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Help with letter of authorisation
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p>A letter of authorisation (LOA) is a document where an organisation confirms who the authorised signatory is and that they have the authority to act on behalf of the organisation.</p>
+
+                        <p>It must be uploaded when you register your organisation with Ofgem, before starting your application for GGSS.</p>
+
+                        <p>The details of the authorised signatory given on the LOA will be cross-checked against the personal details the authorised signatory has provided.</p>
+
+                        <p>We've <a href="https://www.ofgem.gov.uk/publications/green-gas-support-scheme-letter-authorisation">more details on the LOA and a template for you to use (opens in a new tab)</a>.</p>
+                    </div>
+                </details>
+
+                <div class="govuk-form-group @formError">
+                    @{
+                        if (!String.IsNullOrEmpty(Model.Model.Value.Error))
+                        {
+                            <span id="letter-of-authorisation-upload-error" class="govuk-error-message">
+                                @Model.Model.Value.Error
+                            </span>
+                        }
+                    }
+                    <label class="govuk-label" for="letterOfAuthorisation">
+                        Upload a file
+                    </label>
+                    <input class="govuk-file-upload" id="letterOfAuthorisation" name="letterOfAuthorisation" type="file" aria-describedby="letter-of-authorisation">
+                </div>
+                @Html.HiddenFor(m => m.ReturnUrl)
+            </fieldset>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+
+        </div>
+    </div>
+}

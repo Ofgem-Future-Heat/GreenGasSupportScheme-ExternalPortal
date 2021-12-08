@@ -1,0 +1,42 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model StageOneModel
+@{
+    ViewData["Title"] = "Stage One - Self Supply";
+}
+<form action="self-supply" method="post" novalidate>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Owner of the plant supplying feedstock
+                        </h1>
+                    </legend>
+                    <div id="more-detail-hint" class="govuk-hint">
+                        Tell us the name of the person who will do this.
+                    </div>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextInputFor(m => m.FeedstockSelfSupplyName,
+                        classes: "govuk-input govuk-input--width-20")
+                    </div>
+
+                    <div id="start-hint" class="govuk-hint">
+                        Ofgem will ask for evidence that feedstock can be supplied sustainably before you are registered on the
+                        scheme.
+                    </div>
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                   {
+                       Text = "Continue"
+                   })
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Send response";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div>
+            <div class="govuk-form-group">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">@ViewBag.Heading</h1>
+                </legend>
+
+                <p>
+                    Status: @ViewBag.StatusCode
+                </p>
+                <p>
+                    Message: @ViewBag.Message
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

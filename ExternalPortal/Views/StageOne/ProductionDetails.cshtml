@@ -1,0 +1,42 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model StageOneModel
+@{
+    ViewData["Title"] = "Stage One - Production details";
+}
+
+@using (Html.BeginForm("ProductionDetails", "StageOne", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Enter the maximum initial capacity of biomethane you plan to inject per year
+                        </h1>
+                    </legend>
+                    <div id="more-detail-hint" class="govuk-hint">
+                        Enter the volume in cubic metres over 12 months from the date you plan to begin injecting biomethane into the gas grid.
+                    </div>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextInputFor(m => m.MaxCapacity,
+                            classes: "govuk-input govuk-input--width-20")
+                    </div>
+
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                   {
+                       Text = "Save and continue"
+                   })
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+}

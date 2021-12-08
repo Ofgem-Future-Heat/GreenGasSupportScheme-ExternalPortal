@@ -1,0 +1,12 @@
+﻿@model IEnumerable<ExternalPortal.ViewModels.Shared.Components.BreadcrumbViewModel>
+
+<div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+        @foreach (var breadcrumb in Model)
+        {
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="@breadcrumb.Url">@breadcrumb.Text</a>
+            </li>
+        }
+    </ol>
+</div>

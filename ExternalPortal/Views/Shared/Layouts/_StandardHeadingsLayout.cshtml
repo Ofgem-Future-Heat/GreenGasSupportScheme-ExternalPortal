@@ -1,0 +1,42 @@
+﻿@model ExternalPortal.ViewModels.Shared.Layouts.IStandardHeadingsLayoutViewModel
+
+@{
+    Layout = "Layouts/_HeaderAndFooter";
+}
+
+@if (IsSectionDefined("Masthead"))
+{
+    <div class="ofgem-rer-masthead">
+        <div class="govuk-width-container">
+            @RenderSection("Masthead")
+        </div>
+    </div>
+}
+
+<div class="govuk-width-container">
+    @if (Model.Breadcrumbs != null && Model.Breadcrumbs.Any())
+    {
+        await Html.RenderPartialAsync("Components/BreadcrumbTrail", Model.Breadcrumbs);
+    }
+
+    @if (Model.BackLink != null)
+    {
+        await Html.RenderPartialAsync("Components/BackLink", Model.BackLink);
+    }
+    
+    @if (!string.IsNullOrEmpty(Model.ConfirmationText))
+    {
+        <div class="ofgem-rer-confirmation">
+            <span class="ofgem-rer-confirmation__title">@Model.ConfirmationText</span>
+        </div>
+    }
+
+    <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing govuk-body" id="main-content">
+        @if (Model.PageHeading != null)
+        {
+            await Html.RenderPartialAsync("Components/PageHeading", Model.PageHeading);
+        }
+
+        @RenderBody()
+    </main>
+</div>

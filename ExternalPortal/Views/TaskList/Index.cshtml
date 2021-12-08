@@ -1,0 +1,192 @@
+﻿@model ExternalPortal.ViewModels.TaskListViewModel
+
+@{
+    ViewData["Title"] = "Green Gas Support Scheme application";
+
+    <a class="govuk-back-link" href="/dashboard">Back to your dashboard</a>
+}
+
+@Html.AntiForgeryToken()
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Green Gas Support Scheme application</h1>
+
+        @{
+            if (Model.SectionsCompleted() >= 1 && Model.SectionsCompleted() != Model.TotalSections())
+            {
+                <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Application incomplete</h2>
+            }
+        }
+
+        <ol class="app-task-list">
+            <li>
+                <h2 class="app-task-list__section">
+                    <span class="app-task-list__section-number">1. </span> Tell us your plans for producing biomethane
+                </h2>
+
+                <ul class="app-task-list__items">
+
+                    @{
+                        foreach (TaskItemViewModel t in Model.StageOneTasks())
+                        {
+                            <li class="app-task-list__item">
+                                @if (t.Status == TaskStatus.Submitted)
+                                {
+                                    @t.DisplayName
+                                }
+                                else
+                                {
+                                    if (t.Status == TaskStatus.Completed && t.Stage == ApplicationStage.StageOne)
+                                    {
+                                        @Html.ActionLink(t.DisplayName, "CheckAnswers", t.ControllerName, new { Model.ApplicationId })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink(t.DisplayName, t.StartActionName, t.ControllerName, new { Model.ApplicationId })
+                                    }
+                                }
+
+                                <strong class="govuk-tag app-task-list__tag @t.Status.GetDisplayTag()" id=@t.TaskType.ToString()>
+                                    @t.Status.GetDisplayName()
+                                </strong>
+                            </li>
+                        }
+                    }
+
+                    @if (Model.ApplicationProgress < ApplicationProgress.StageOneSubmitted)
+                    {
+                        <li>
+                            <br />
+                            @if (Model.StageOneComplete)
+                            {
+                                <p class="govuk-body">By clicking 'accept and submit', you're confirming that, to the best of your knowledge, the details you're providing are correct.</p>
+                                <form class="" action="/task-list/save-stage-one" method="post">
+                                    <input type="hidden" name="stage-one-completed" value="true">
+                                    <button class="govuk-button" data-module="govuk-button">
+                                        Accept and submit
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p class="govuk-body">You cannot submit until you have completed all the tasks in this section.</p>
+                                <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+                                    Accept and submit
+                                </button>
+                            }
+                        </li>
+                    }
+                </ul>
+            </li>
+            <li>
+                <h2 class="app-task-list__section">
+                    <span class="app-task-list__section-number">2. </span> Give us evidence of your project finances
+                </h2>
+
+                <ul class="app-task-list__items">
+                    @{
+                        foreach (TaskItemViewModel t in Model.StageTwoTasks())
+                        {
+                            <li class="app-task-list__item">
+                                @if (!Model.StageOneApproved || t.Status == TaskStatus.Submitted)
+                                {
+                                    @t.DisplayName
+                                }
+                                else
+                                {
+                                    if (t.Status == TaskStatus.Completed && t.Stage == ApplicationStage.StageTwo)
+                                    {
+                                        @Html.ActionLink(t.DisplayName, "CheckYourAnswers", t.ControllerName, new { ApplicationId = Model.ApplicationId })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink(t.DisplayName, t.StartActionName, t.ControllerName, new { ApplicationId = Model.ApplicationId })
+                                    }
+                                }
+
+                                <strong class="govuk-tag app-task-list__tag @t.Status.GetDisplayTag()" id=@t.TaskType.ToString()>
+                                    @t.Status.GetDisplayName()
+                                </strong>
+                            </li>
+                        }
+                    }
+
+                    @if (Model.ApplicationProgress == ApplicationProgress.StageOneApproved)
+                    {
+                        <li>
+                            <br />
+                            @if (Model.StageTwoComplete)
+                            {
+                                <p class="govuk-body">By clicking 'accept and submit', you're confirming that, to the best of your knowledge, the details you're providing are correct.</p>
+                                <form class="" action="/task-list/save-stage-two" method="post">
+                                    <input type="hidden" name="stage-two-completed" value="true">
+                                    <button class="govuk-button" data-module="govuk-button">
+                                        Accept and submit
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p class="govuk-body">You cannot submit until you've completed all the tasks in this section.</p>
+                                <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+                                    Accept and submit
+                                </button>
+                            }
+                        </li>
+                    }
+                </ul>
+            </li>
+
+            <li>
+                <h2 class="app-task-list__section">
+                    <span class="app-task-list__section-number">3. </span> Give us your commissioning and production evidence
+                </h2>
+                <ul class="app-task-list__items">
+                    @{
+                        foreach (TaskItemViewModel t in Model.StageThreeTasks())
+                        {
+                            <li class="app-task-list__item">
+                                @if (!Model.StageTwoApproved || t.Status == TaskStatus.Submitted)
+                                {
+                                    @t.DisplayName
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(t.DisplayName, t.StartActionName, t.ControllerName, new { ApplicationId = Model.ApplicationId })
+                                }
+
+                                <strong class="govuk-tag app-task-list__tag @t.Status.GetDisplayTag()" id=@t.TaskType.ToString()>
+                                    @t.Status.GetDisplayName()
+                                </strong>
+                            </li>
+                        }
+                    }
+                    @if (Model.ApplicationProgress == ApplicationProgress.StageTwoApproved)
+                    {
+                        <li>
+                            <br />
+                            @if (Model.StageThreeComplete)
+                            {
+                                <p class="govuk-body">By clicking 'accept and submit', you're confirming that, to the best of your knowledge, the details you're providing are correct.</p>
+                                <form class="" action="submit/stage-two-confirmation" method="post">
+                                    <input type="hidden" name="stage-two-completed" value="true">
+                                    <button class="govuk-button" data-module="govuk-button">
+                                        Accept and submit
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p class="govuk-body">You cannot submit until you've completed all the tasks in this section.</p>
+                                <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+                                    Accept and submit
+                                </button>
+                            }
+                        </li>
+                    }
+                </ul>
+            </li>
+        </ol>
+    </div>
+</div>

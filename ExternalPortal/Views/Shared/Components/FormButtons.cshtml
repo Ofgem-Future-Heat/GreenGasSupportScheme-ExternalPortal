@@ -1,0 +1,30 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Shared.Components.FormButtonsViewModel
+
+@if (Model.Buttons.Any() || !string.IsNullOrEmpty(Model.CancelLinkUrl))
+{
+    <div class="govuk-button-group">
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <p class="govuk-body">Model.Message</p>
+        }
+        @foreach (var button in Model.Buttons)
+        {
+            @await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = button.Text,
+                Classes = button.CssClasses,
+                Value = button.Value,
+                Href = button.Href,
+                Name = button.Name,
+                Disabled = button.Disabled
+            })
+        }
+        @if (!string.IsNullOrEmpty(Model.CancelLinkUrl))
+        {
+            <a href="@Model.CancelLinkUrl">Cancel</a>
+        }
+    </div>
+}

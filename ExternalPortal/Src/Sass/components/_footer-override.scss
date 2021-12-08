@@ -1,0 +1,20 @@
+$govuk-footer-text: #454a4c;
+$govuk-footer-background: govuk-colour("light-grey");
+
+.govuk-footer {
+    &__link {
+        @extend .govuk-header__link;
+        color: $govuk-footer-text;
+
+        &:link,
+        &:visited {
+            color: $govuk-footer-text;
+        }
+
+        &:focus {
+            background-color: $govuk-footer-background;
+            border-bottom-color: $govuk-footer-background;
+            box-shadow: 0 -2px $govuk-footer-background, 0 4px $govuk-footer-background;
+        }
+    }
+}

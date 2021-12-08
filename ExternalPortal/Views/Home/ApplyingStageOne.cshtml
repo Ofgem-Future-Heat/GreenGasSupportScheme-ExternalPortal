@@ -1,0 +1,137 @@
+﻿@{
+    ViewData["Title"] = "Applying stage 1 - Home - Green Gas Support Scheme";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Applying for stage 1
+        </h1>
+
+        <p>
+            At stage 1, you’ll need to give us the:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                name of the biomethane installation and its location
+            </li>
+            <li>
+                planning permission
+            </li>
+            <li>
+                details about how you’ll produce biomethane
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">
+            Biomethane installation
+        </h2>
+
+        <h3 class="govuk-heading-s">
+            Tell us
+        </h3>
+
+        <p>
+            You’ll need to provide a description of the equipment used to produce biomethane.
+        </p>
+
+        <p>
+            You’ll also need to give us the following details for your anaerobic digestion plant and injection point:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                name
+            </li>
+            <li>
+                address
+            </li>
+            <li>
+                country - England, Scotland or Wales
+            </li>
+        </ul>
+
+        <h3 class="govuk-heading-s">
+            Upload
+        </h3>
+
+        <p>
+            You’ll need to provide a copy of your connection agreement. This is different from the network entry agreement which we’ll ask for at stage 3.
+        </p>
+
+        <p>
+            This document must show the injection point you discussed with the network. This needs to be signed by both parties.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Planning permission
+        </h2>
+
+        <h3 class="govuk-heading-s">
+            Tell us
+        </h3>
+
+        <p>
+            You'll need to confirm that your biomethane installation has been granted planning permission or that planning permission’s not required.
+        </p>
+
+        <h3 class="govuk-heading-s">
+            Upload
+        </h3>
+
+        <p>
+            If planning permission’s required for any of the equipment that’s used to produce biomethane, you must provide evidence from the relevant planning authority that it’s been granted.
+        </p>
+
+        <p>
+            If planning permission is not required, you’ll need to provide a statement that it’s not required.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            How you’ll produce biomethane
+        </h2>
+
+        <h3 class="govuk-heading-s">
+            Tell us
+        </h3>
+
+        <p>
+            You’ll need to tell us:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                the maximum initial capacity of biomethane you’re entitled to inject per year
+            </li>
+            <li>
+                the volume in cubic metres of eligible biomethane which you intend to inject each year
+            </li>
+            <li>
+                the date you expect to start injecting biomethane
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">
+            Need help?
+        </h2>
+
+        <p>
+            If you have any questions, visit our <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy" target="_blank">website (opens in a new tab)</a> where you’ll find additional guidance for the scheme.
+        </p>
+
+        <p>
+            You can also <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/green-gas-support-scheme-and-green-gas-levy-contacts" target="_blank">contact us (opens in a new tab)</a>.
+        </p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+
+</div>

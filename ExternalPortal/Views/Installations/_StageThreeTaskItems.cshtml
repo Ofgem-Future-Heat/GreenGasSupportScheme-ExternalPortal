@@ -1,0 +1,134 @@
+﻿@model ExternalPortal.ViewModels.InstallationModel
+
+<li>
+    <h2 class="app-task-list__section">
+        <span class="app-task-list__section-number">3. </span> Give evidence of commissioning
+    </h2>
+
+    <ul class="app-task-list__items">
+
+        @if (Model.Application.Value.Status == ApplicationStatus.StageTwoSubmitted)
+        {
+            @if (Model.Application.Value.Status == ApplicationStatus.StageThreeSubmitted)
+            {
+                <li class="app-task-list__item">
+                    <a class="task-name" href="tell-us-about-your-site/check-answers" aria-describedby="read-declaration-completed">
+                        @Model.StageThree.NetworkEntryAgreement.Type.GetDisplayName()
+                    </a>
+                    <strong class="govuk-tag app-task-list__tag @Model.StageThree.NetworkEntryAgreement.State.GetDisplayTag()" id="NetworkEntryAgreement-status">
+                        @Model.StageThree.NetworkEntryAgreement.State.GetDisplayName()
+                    </strong>
+                </li>
+                <li class="app-task-list__item">
+                    <a class="task-name" href="tell-us-about-your-site/check-answers" aria-describedby="read-declaration-completed">
+                        @Model.StageThree.CommissioningEvidence.Type.GetDisplayName()
+                    </a>
+                    <strong class="govuk-tag app-task-list__tag @Model.StageThree.CommissioningEvidence.State.GetDisplayTag()" id="CommissioningEvidence-status">
+                        @Model.StageThree.CommissioningEvidence.State.GetDisplayName()
+                    </strong>
+                </li>
+                <li class="app-task-list__item">
+                    <a class="task-name" href="tell-us-about-your-site/check-answers" aria-describedby="read-declaration-completed">
+                        @Model.StageThree.BiogasProductionPlant.Type.GetDisplayName()
+                    </a>
+                    <strong class="govuk-tag app-task-list__tag @Model.StageThree.BiogasProductionPlant.State.GetDisplayTag()" id="BiogasProductionPlant-status">
+                        @Model.StageThree.BiogasProductionPlant.State.GetDisplayName()
+                    </strong>
+                </li>
+                <li class="app-task-list__item">
+                    <a class="task-name" href="tell-us-about-your-site/check-answers" aria-describedby="read-declaration-completed">
+                        @Model.StageThree.FuelMeasurementAndSamplingQuestionaire.Type.GetDisplayName()
+                    </a>
+                    <strong class="govuk-tag app-task-list__tag @Model.StageThree.FuelMeasurementAndSamplingQuestionaire.State.GetDisplayTag()" id="FuelMeasurementAndSamplingQuestionaire-status">
+                        @Model.StageThree.FuelMeasurementAndSamplingQuestionaire.State.GetDisplayName()
+                    </strong>
+                </li>
+                <li class="app-task-list__item">
+                    <a class="task-name" href="tell-us-about-your-site/check-answers" aria-describedby="read-declaration-completed">
+                        @Model.StageThree.MeteringDetails.Type.GetDisplayName()
+                    </a>
+                    <strong class="govuk-tag app-task-list__tag @Model.StageThree.MeteringDetails.State.GetDisplayTag()" id="MeteringDetails-status">
+                        @Model.StageThree.MeteringDetails.State.GetDisplayName()
+                    </strong>
+                </li>
+            }
+            else
+            {
+            }
+
+
+            @*@if (Model.State == ApplicationStatus.StageTwoSubmitted)
+            {
+                {
+                    if (Model.StageThree.NetworkEntryAgreement.State == TaskStatus.Completed
+                        && Model.StageThree.CommissioningEvidence.State == TaskStatus.Completed
+                        && Model.StageThree.BiogasProductionPlant.State == TaskStatus.Completed
+                        && Model.StageThree.FuelMeasurementAndSamplingQuestionaire.State == TaskStatus.Completed
+                        && Model.StageThree.MeteringDetails.State == TaskStatus.Completed)
+                    {
+                        <p class="govuk-body">By clicking 'accept and submit', you're confirming that, to the best of your knowledge, the details you're providing are correct.</p>
+                        <form class="" action="submit/stage-three-confirmation" method="post">
+                            <input type="hidden" name="stage-three-completed" value="true">
+                            <button class="govuk-button" data-module="govuk-button">
+                                Save and continue
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <p class="govuk-body">You cannot submit until you have completed all the tasks in this section</p>
+                        <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+                            Save and continue
+                        </button>
+                    }
+                }
+
+            }*@
+            @*</ul>*@
+            @*</li>*@
+        }
+        else
+        {
+            <li class="app-task-list__item">
+                <span class="app-task-list__task-name">
+                    @Model.StageThree.NetworkEntryAgreement.Type.GetDisplayName()
+                </span>
+                <strong class="govuk-tag app-task-list__tag @Model.StageThree.NetworkEntryAgreement.State.GetDisplayTag()" id="NetworkEntryAgreement-status">
+                    @Model.StageThree.NetworkEntryAgreement.State.GetDisplayName()
+                </strong>
+            </li>
+            <li class="app-task-list__item">
+                <span class="app-task-list__task-name">
+                    @Model.StageThree.CommissioningEvidence.Type.GetDisplayName()
+                </span>
+                <strong class="govuk-tag app-task-list__tag @Model.StageThree.CommissioningEvidence.State.GetDisplayTag()" id="CommissioningEvidence-status">
+                    @Model.StageThree.CommissioningEvidence.State.GetDisplayName()
+                </strong>
+            </li>
+            <li class="app-task-list__item">
+                <span class="app-task-list__task-name">
+                    @Model.StageThree.BiogasProductionPlant.Type.GetDisplayName()
+                </span>
+                <strong class="govuk-tag app-task-list__tag @Model.StageThree.BiogasProductionPlant.State.GetDisplayTag()" id="BiogasProductionPlant-status">
+                    @Model.StageThree.BiogasProductionPlant.State.GetDisplayName()
+                </strong>
+            </li>
+            <li class="app-task-list__item">
+                <span class="app-task-list__task-name">
+                    @Model.StageThree.FuelMeasurementAndSamplingQuestionaire.Type.GetDisplayName()
+                </span>
+                <strong class="govuk-tag app-task-list__tag @Model.StageThree.FuelMeasurementAndSamplingQuestionaire.State.GetDisplayTag()" id="FuelMeasurementAndSamplingQuestionaire-status">
+                    @Model.StageThree.FuelMeasurementAndSamplingQuestionaire.State.GetDisplayName()
+                </strong>
+            </li>
+            <li class="app-task-list__item">
+                <span class="app-task-list__task-name">
+                    @Model.StageThree.MeteringDetails.Type.GetDisplayName()
+                </span>
+                <strong class="govuk-tag app-task-list__tag @Model.StageThree.MeteringDetails.State.GetDisplayTag()" id="MeteringDetails-status">
+                    @Model.StageThree.MeteringDetails.State.GetDisplayName()
+                </strong>
+            </li>
+        }
+    </ul>
+</li>

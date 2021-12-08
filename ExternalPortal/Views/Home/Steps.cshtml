@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Steps involved";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">
+            Green Gas Support Scheme
+        </h1>
+        @{
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+</div>

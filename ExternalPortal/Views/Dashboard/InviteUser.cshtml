@@ -1,0 +1,45 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.InvitationsViewModel
+
+@{
+    ViewData["Title"] = "Invite a user to this organisation";
+
+    @if (Model.BackLink != null)
+    {
+        <p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+    }
+}
+
+<form action="invite-user" method="post">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            What is the email address of the person you want to invite to @Model.OrganisationName
+                        </h1>
+                    </legend>
+
+                    <div class="govuk-form-group ">
+                        @await Html.GovUkTextInputFor(m => m.UserEmail,
+                        classes: "govuk-input",
+                        labelOptions: new LabelViewModel { Text = "Email address" }) 
+                    </div>
+                </fieldset>
+
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                           {
+                               Text = "Continue"
+                           })
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+</form>

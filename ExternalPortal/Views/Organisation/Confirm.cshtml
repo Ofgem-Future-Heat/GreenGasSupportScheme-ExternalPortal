@@ -1,0 +1,84 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model PortalViewModel<OrganisationModel>
+
+@{
+    ViewData["Title"] = Model.HasErrors ? "Error: Confirm organisation" : "Confirm organisation";
+
+    var formError = Model.HasErrors ? "govuk-form-group--error" : "";
+    
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+@using (Html.BeginForm("Confirm", "Organisation", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-heading-l">
+                Is this your company?
+            </div>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Model.Value.Name
+                </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Address
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Html.Raw(Model.Model.Value.RegisteredOfficeAddress.ToHtmlString())
+            </dd>
+        </div>
+        </dl>
+
+        <div class="govuk-form-group @formError">
+            <fieldset class="govuk-fieldset">
+                @{
+                    if (Model.HasErrors)
+                    {
+                        <span id="companies-house-select-error" class="govuk-error-message">
+                            @Model.Errors.ToHtmlList()
+                        </span>
+                    }
+                }
+                <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="is-company" name="submit" type="radio" value="confirm">
+                        <label class="govuk-label govuk-radios__label" for="submit">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="is-company-2" name="submit" type="radio" value="cancel">
+                        <label class="govuk-label govuk-radios__label" for="submit">
+                            No
+                        </label>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.ReturnUrl)
+            </fieldset>
+        </div>
+
+        <p>
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+        </p>
+
+    </div>
+
+
+    </div>
+
+}
+

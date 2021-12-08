@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Recording and reporting the biomethane output";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Recording and reporting biomethane output
+        </h1>
+        <p>
+            Use this guidance to help you prepare the right supporting information to apply for stage 3 of the Tariff
+            Guarantee.
+        </p>
+        <h3 class="govuk-heading-s">
+            1. Gather evidence of your plans to measure the volume of biomethane your plant will
+            produce
+        </h3>
+
+        <p>
+            You'll need to prepare technical evidence, including any schematic plans of how you plan to record and report the
+            volume of biomethane your plant will produce and inject.
+        </p>
+
+        <p>
+            This must include details of how you plan to measure all biogas you generate. Your metering equipment will need
+            to be able to show clearly the opening reading before you start injecting gas. It must also have a serial number.
+        </p>
+
+        <h3 class="govuk-heading-s">2. Prepare information about the business making the application</h3>
+
+        <p>
+            You'll need to show that the business applying to claim payment for producing biomethane is legitimate, and has a
+            recognised history of previous experience and activity. For example, the business needs to have a company
+            registration number listed on Companies House.
+        </p>
+
+        <p>The company also needs to show that it can produce biomethane sustainably.</p>
+
+        <p>At this stage you'll need to:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>include company name and registration number (for example, registered on Companies House)</li>
+            <li>show a history of experience with projects of a similar size and complexity</li>
+            <li>demonstrate experience of managing projects requiring large amounts of funding</li>
+            <li>say whether the business is based inside or outside of the United Kingdom</li>
+            <li>
+                say who's making the application, and if it's not the named business owner, whether permission has been given
+                to do this on their behalf
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+</div>

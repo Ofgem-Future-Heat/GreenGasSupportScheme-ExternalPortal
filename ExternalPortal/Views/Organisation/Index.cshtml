@@ -1,0 +1,45 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@{
+    ViewData["Title"] = "Register an organisation";
+}
+
+<a href="javascript:history.go(-1)" class="govuk-back-link">Back</a>
+
+@using (Html.BeginForm("Type", "ResponsiblePerson", FormMethod.Get))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Register an organisation</h1>
+
+            <p class="govuk-body">Before you start registering your organisation, read <a href="/register-an-organisation/before-you-apply">before you create an account</a>.</p>
+
+            <p class="govuk-body">You'll need to:</p>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>give us your company registration number (if you have one)</li>
+                <li>assign an authorised signatory - they'll be the person responsible for taking part in the scheme on behalf of their organisation</li>
+                <li>give us a letter of authorisation from the owner of the organisation </li>
+            </ul>
+
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    The authorised signatory cannot be a consultant making the application on behalf of the applicant.
+                </strong>
+            </div>
+
+            <p>
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+                </div>
+            </p>
+
+        </div>
+    </div>
+}
+

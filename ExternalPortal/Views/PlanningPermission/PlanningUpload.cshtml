@@ -1,0 +1,57 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlanningPermission.PlanningPermission
+
+@{
+    ViewData["Title"] = "Planning permission";
+
+    var formError = Model.HasErrors ? "govuk-form-group--error" : "";
+    
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+@{
+    await Html.RenderPartialAsync("Components/ViewBackLink", ExternalPortal.Constants.UrlKeys.PlanningPermissionDoYouHave);
+}
+
+@using (Html.BeginForm("PlanningUpload", "PlanningPermission", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Upload your planning permission documents
+                </h1>
+                <div id="more-detail-hint" class="govuk-hint">
+                    You can only upload PDF, JPG, PNG, BMP, TIF, XLS or XLSX files. No file can be larger than 5MB.
+                </div>
+            </legend>
+
+            <div class="govuk-form-group @formError">
+                @{
+                    if (Model.HasErrors)
+                    {
+                        <span id="planning-permission-upload-error" class="govuk-error-message">
+                            @Model.Errors.First()
+                        </span>
+                    }
+                }
+                <label class="govuk-label" for="planningPermissionFile">
+                    Upload a file
+                </label>
+                <input class="govuk-file-upload" id="planningPermissionFile" name="planningPermissionFile" type="file" aria-describedby="planning-permission">
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+            
+            @{
+                await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+            }
+        </div>
+    </div>
+}

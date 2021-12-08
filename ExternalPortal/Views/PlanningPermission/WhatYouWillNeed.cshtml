@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewData["Title"] = "Provide planning permission";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">Planning permission</h1>
+
+        <p class="govuk-body">
+            You'll need to:
+            <ul class="govuk-list govuk-list--bullet">
+                <li>tell us if you have planning permission for your biomethane installation</li>
+                <li>upload a document about your planning permission – we can only accept one upload but you can email us at <a href="mailto:GGSS.app@ofgem.gov.uk">GGSS.app@ofgem.gov.uk</a> with any other documents</li>
+            </ul>
+
+            <div class="govuk-button-group">
+                <a href="@ExternalPortal.Constants.UrlKeys.PlanningPermissionDoYouHave" class="govuk-button">Continue</a>
+            </div>
+        </p>
+        
+        @{
+            await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+        }
+    </div>
+</div>

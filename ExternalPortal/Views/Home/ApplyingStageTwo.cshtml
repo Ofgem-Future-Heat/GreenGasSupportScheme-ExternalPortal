@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Applying stage 2 - Home - Green Gas Support Scheme";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Applying for stage 2
+        </h1>
+
+        <p>
+            You'll have three weeks from the date the provisional tariff guarantee notice (PTGN) is issued to submit your stage 2 application.
+        </p>
+
+        <p>
+            At stage 2, you'll need to show that funds are available to complete the construction of your project and are formally committed.
+        </p>
+
+        <p>
+            To show you've reached 'financial close', you'll need to give us:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                an ISAE 3000 assurance report, confirming financial close has been met
+            </li>
+            <li>
+                documents provided to your auditor
+            </li>
+        </ul>
+
+        <p>
+            We need producers of biomethane to submit independently audited information, prepared to an adequate standard. An independent auditor must prepare this report. You must also give us evidence that an independent auditor has undertaken this.
+        </p>
+
+        <p>
+            This audit should be in accordance with the requirements of limited assurance engagements stated in ISAE 3000 (revised) or equivalent.
+        </p>
+
+        <p>
+            At the end of stage 2, once we're satisfied with the information provided, we'll issue you a tariff guarantee notice.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Need help?
+        </h2>
+
+        <p>
+            If you have any questions, visit our <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy" target="_blank">website (opens in a new tab)</a> where you'll find additional guidance for the scheme.
+        </p>
+
+        <p>
+            You can also <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/green-gas-support-scheme-and-green-gas-levy-contacts" target="_blank">contact us (opens in a new tab)</a>.
+        </p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+
+</div>

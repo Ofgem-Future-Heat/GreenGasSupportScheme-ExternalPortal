@@ -1,0 +1,44 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using ExternalPortal.Helpers
+@model ExternalPortal.ViewModels.ProductionDetails.ProductionDetailsStartDateViewModel
+@{
+    ViewData["Title"] = "Date you expect to start injecting biomethane";
+}
+
+<a href="javascript:history.go(-1)" class="govuk-back-link">Back</a>
+
+@using (Html.BeginForm("StartDate", "ProductionDetails", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <div class="govuk-date-input" id="start-date">
+                    <fieldset class="govuk-fieldset" aria-describedby="StartDate-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                When do you expect to start injecting biomethane?
+                            </h1>
+                        </legend>
+                        <span class="govuk-hint" id="StartDate-hint">
+                            For example, 27 03 2022
+                        </span>
+                            <div class="govuk-date-input__item">
+                                @await Html.GovUkDateInputFor(m => m.StartDate)
+                            </div>
+                    </fieldset>
+                </div>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+                    </div>
+                </p>
+            </div>
+                    
+            <a class="govuk-link" href="/task-list"> Return to your application </a>
+            
+        </div>
+    </div>
+}

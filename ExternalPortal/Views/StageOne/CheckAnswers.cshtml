@@ -1,0 +1,189 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model StageOneModel
+@{
+    ViewData["Title"] = "Stage One - Feedstock Supply";
+}
+<form action="check-answers" method="post" novalidate>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+
+            <h1 class="govuk-heading-l">Check your answers before sending your application</h1>
+
+            <h2 class="govuk-heading-m">Plant details</h2>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Location
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.PlantLocation
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="plant-location">
+                        Change<span class="govuk-visually-hidden"> plant location</span>
+                    </a>
+                </dd>
+               </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Connection agreement
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.CapacityUploadFileName
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="capacity-upload">
+                            Change<span class="govuk-visually-hidden"> connection agreement</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Plant name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.PlantAddress.Name
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="plant-address">
+                            Change<span class="govuk-visually-hidden"> plant name</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Site address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <p class="govuk-body">@Model.PlantAddress.Line1</p>
+                        <p class="govuk-body">@Model.PlantAddress.Line2</p>
+                        <p class="govuk-body">@Model.PlantAddress.Town</p>
+                        <p class="govuk-body">@Model.PlantAddress.County</p>
+                        <p class="govuk-body">@Model.PlantAddress.Postcode</p>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="plant-address">
+                            Change<span class="govuk-visually-hidden"> site address</span>
+                        </a>
+                    </dd>
+                </div>
+            </dl>
+
+        <h2 class="govuk-heading-m">Planning permission</h2>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Planning outcome
+            </dt>
+            @if (Model.HasPlanningPermission)
+            {
+                <dd class="govuk-summary-list__value">
+                    I was given planning permission
+                </dd>
+            }
+            else
+            {
+                <dd class="govuk-summary-list__value">
+                    Planning permission not required
+                </dd>
+            }
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="planning-permission">
+                    Change<span class="govuk-visually-hidden"> planning outcome</span>
+                </a>
+            </dd>
+            </div>
+    @if (Model.HasPlanningPermission)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Planning upload
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.PlanningPermissionFileName
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="planning-upload">
+                    Change<span class="govuk-visually-hidden"> upload</span>
+                </a>
+            </dd>
+        </div>
+    }
+
+    @if (!Model.HasPlanningPermission)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Permission not required upload
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.PlanningPermissionFileName
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="exempt-upload">
+                    Change<span class="govuk-visually-hidden"> upload</span>
+                </a>
+            </dd>
+        </div>
+    }
+    </dl>
+
+    <h2 class="govuk-heading-m">Production details</h2>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Volume of biomethane
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @Model.MaxCapacity
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="@UrlKeys.ProductionDetailsMaximumInitialCapacity">
+                Change<span class="govuk-visually-hidden"> production details</span>
+            </a>
+        </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Expected start date
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @Model.InjectionStartDay @Model.InjectionStartMonth  @Model.InjectionStartYear
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="@UrlKeys.ProductionDetailsMaximumInitialCapacity">
+                Change<span class="govuk-visually-hidden"> production details</span>
+            </a>
+        </dd>
+        </div>
+    </dl>
+
+
+    <h2 class="govuk-heading-m">Now send your application</h2>
+
+    <p class="govuk-body">
+        By submitting this notification you are confirming that, to the best of your knowledge, the
+        details you are providing are correct.
+    </p>
+
+    <p>
+        <div class="govuk-button-group">
+            @await Html.GovUkButton(new ButtonViewModel
+       {
+           Text = "Accept and submit"
+       })
+        </div>
+    </p>
+
+    </div>
+    </div>
+    </div>
+
+</form>

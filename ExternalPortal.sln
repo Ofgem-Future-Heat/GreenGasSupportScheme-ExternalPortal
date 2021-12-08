@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.809.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExternalPortal.UnitTests", "ExternalPortal.UnitTests\ExternalPortal.UnitTests.csproj", "{0A7D6D18-B098-4A85-8C51-6B3DDE2C9D43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalPortal", "ExternalPortal\ExternalPortal.csproj", "{A8A17E7C-103B-4B67-86C5-8490C50BF520}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A7D6D18-B098-4A85-8C51-6B3DDE2C9D43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A7D6D18-B098-4A85-8C51-6B3DDE2C9D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A7D6D18-B098-4A85-8C51-6B3DDE2C9D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A7D6D18-B098-4A85-8C51-6B3DDE2C9D43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8A17E7C-103B-4B67-86C5-8490C50BF520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8A17E7C-103B-4B67-86C5-8490C50BF520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8A17E7C-103B-4B67-86C5-8490C50BF520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8A17E7C-103B-4B67-86C5-8490C50BF520}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C70A5AD-CE0B-4E44-9709-54A2B0EB69EF}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Provisional Tariff - Introduction";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Planning permission for your biomethane plant
+        </h1>
+
+        <p>As part of your application, you'll need to send evidence that you have planning permission to build a biomethane plant.</p>
+
+        <p>You'll need to send us any updates about the development of the biomethane plant throughout the application.</p>
+        <h2 class="govuk-heading-m">
+            1. Send evidence of planning permission
+        </h2>
+        <p>Send us scanned copies or photographs of the biomethane plant planning documents.</p>
+        <p>The planning documents must show:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>details about the proposed technology for producing biomethane</li>
+            <li>the exact site location of the proposed installation</li>
+            <li>confirmation of planning approval from the local authority</li>
+            <li>information about site access</li>
+            <li>design plans, including details of anaerobic digesters, scrubbers, and biomethane injection points</li>
+        </ul>
+        <div class="govuk-inset-text">
+            You must tell the local authority and Ofgem if the proposed location of the biomethane plant changes.
+        </div>
+        <h3 class="govuk-heading-s">If planning permission is not required</h3>
+
+        <p>You'll need to send us PDF copies of emails to and from the local authority. These emails must clearly show:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+
+            <li>any documents or information you sent to support your application as attachments</li>
+            <li>named individuals from the local authority's planning department</li>
+            <li>confirmation of the exact site location of the biomethane installation that does not require planning permission</li>
+            <li>the technology that the biomethane producer plans to use at their plant</li>
+            <li>dates of communication and responses</li>
+        </ul>
+        <p>
+            Ofgem may contact you with any questions or requests for further explanation after you have provided these
+            documents.
+        </p>
+        <h3 class="govuk-heading-s">2. Plan for an independent audit against ISAE 3000</h3>
+        <h3 class="govuk-heading-s">3. Plan for Environmental Agency certification</h3>
+        <p>
+            Later on in your application for a [TG or accreditation?] you will need to show that your plans for building and
+            managing the site and digestate fuel (feedstock) meet Environment Agency requirements specific to the site.
+        </p>
+        <p>These requirements may refer to:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>traffic management</li>
+            <li>pollution</li>
+            <li>waste management</li>
+            <li>sourcing, transporting, storing, and using digestate fuel (feedstock)</li>
+            <li>other considerations specific to the location and technologies used.</li>
+        </ul>
+        <div class="govuk-inset-text">
+            It can take many months before Environment Agency licenses are granted. This could delay your GGSS application and
+            payments.
+        </div>
+        <h3 class="govuk-heading-s">Gas network agreements</h3>
+        <p>
+            These show Ofgem that the gas network has confirmed there is capacity in the grid to receive biomethane
+            injections from the plant.
+        </p>
+        <h3 class="govuk-heading-s">What Ofgem will look for</h3>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>confirmation from the gas network that there is capacity for additional biomethane</li>
+            <li>
+                the location(s) for injecting biomethane into the grid match the location described in planning permission
+                documents on the local authority portal
+            </li>
+            <li>how much biomethane you plan to inject into the grid</li>
+            <li>when you plan to begin these injections</li>
+        </ul>
+        <p>
+            Keeping your information up to date with the Green Gas Support Scheme team means there is less risk of delays to
+            your application.
+        </p>
+        <h3 class="govuk-heading-s">
+            Other evidence from these discussions will be required to secure a Tariff Guarantee:
+        </h3>
+        <h3 class="govuk-heading-s">5. Plans for securing fuel (feedstock)</h3>
+        <p>
+            If you already know where your feedstock materials will come from (for example if the plant will have access to
+            suitable materials from your own property) then it will help your application to tell us about this.
+        </p>
+        <p>
+            You can include any contracts or evidence showing how feedstock has been secured for the plant described in your
+            application.
+        </p>
+        <p>If you do not know this yet you can still apply for Stage 1 Tariff Guarantee approval. </p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+</div>

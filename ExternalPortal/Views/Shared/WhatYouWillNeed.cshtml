@@ -1,0 +1,27 @@
+@model ExternalPortal.ViewModels.Tasks.TaskRequirementsViewModel
+@{
+    ViewData["Title"] = $"{ Model?.TaskType.GetDisplayName() } - What you will need";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <a href="javascript:history.go(-1)" class="govuk-back-link">Back</a>
+
+        <h1 class="govuk-heading-l">@Model?.TaskType.GetDisplayName()</h1>
+
+        <p class="govuk-body">You'll need tell us:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            @foreach (string requirement in Model?.Requirements)
+            {
+                <li>@requirement</li>
+            }
+        </ul>
+
+        @Html.ActionLink("Continue", Model?.ProceedActionName, Model.ControllerName ?? Model.TaskType.ToString(), null, new { @role= "button", @draggable = "false", @class = "govuk-button", @datamodule = "govuk-button" })
+
+        <p>
+            @Html.ActionLink("Return to your application", "Index", "TaskList", new { organisationId = Model.OrganisationId }, new { @class = "govuk-link" })
+        </p>
+    </div>
+</div>

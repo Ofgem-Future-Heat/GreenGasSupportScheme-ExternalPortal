@@ -1,0 +1,61 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model PortalViewModel<Ofgem.API.GGSS.Domain.Models.OrganisationModel>
+
+@{
+    ViewData["Title"] = "Provide a legal document";
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var formError = string.IsNullOrEmpty(Model.Model.Value.Error) ? "" : "govuk-form-group--error";
+}
+
+@using (Html.BeginForm("LegalDocUpload", "Organisation", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <div>
+                    <h1 class="govuk-fieldset__heading">
+                        Provide a legal document
+                    </h1>
+
+                    <div class="govuk-form-group @formError">
+                        @{
+                            if (!string.IsNullOrEmpty(Model.Model.Value.Error))
+                            {
+                                <span id="transport-upload-error" class="govuk-error-message">
+                                    @Model.Model.Value.Error
+                                </span>
+                            }
+                        }
+                        <label class="govuk-label" for="legalDocument">Upload a file</label>
+                        <input class="govuk-file-upload" id="legalDocument" name="legalDocument" type="file">
+                    </div>
+
+                    <p class="govuk-body">
+                        You can only upload PDF, JPG, PNG, BMP, TIF, XLS or XLSX files. No file can be larger than 5MB.
+                    </p>
+
+                    <p class="govuk-body">
+                        If your organisation is not a private limited company but is still a cooperate entity or partnership, you'll need to give us some evidence.
+                    </p>
+
+                    <p class="govuk-body">
+                        This could be a partnership between farmers. For this, we'd need to see a contract which names those with significant control within the organisation. It must also include the name of your authorised signatory.
+                    </p>
+
+                    <p class="govuk-body">
+                        If you own the installation yourself, you do not have to give us evidence.
+                    </p>
+                </div>
+
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel {Text = "Continue", Type = "Submit"})
+                </div>
+            </legend>
+
+            @Html.HiddenFor(m => m.ReturnUrl)
+        </div>
+    </div>
+}

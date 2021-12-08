@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Sourcing, storing and using your feedstock";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Sourcing, storing and using your feedstock
+        </h1>
+        <p>Use this guidance to help you prepare the right supporting information to apply for stage 2 of the Tariff Guarantee.</p>
+        <h3 class="govuk-heading-s">1. Provide evidence that you meet Environmental Agency standards</h3>
+        <p>You'll need to show that your plans for sourcing, transporting, storing and using digestate materials meet Environmental Agency standards. Ofgem will need to see this evidence as an Environmental Agency certificate.</p>
+        <h3 class="govuk-heading-s">Secure a gas network connection</h3>
+        <p>You'll need to provide Ofgem with a signed contract from the gas network to show that you're able to establish a connection to the grid. This contract is called a network connection agreement.</p>
+        <p>The agreement must show:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>details of the design and construction of the connection where the biomethane will be injected</li>
+            <li>confirmation from the gas network that the biomethane producer has paid for the connection in full (for example, a receipt or bank statement as proof of payment)</li>
+            <li>that the gas network has made a capacity check. Ofgem will need a capacity check form to show the result of this check.</li>
+        </ul>
+        <p>Ofgem will also need any correspondence showing that a date for starting to inject biomethane has been planned for.</p>
+        <h3 class="govuk-heading-s">3. Plan ahead for securing a supply of feedstock</h3>
+        <p>
+            You don't need to have a confirmed arrangement for securing feedstock at this stage. You can still continue through the application without this. But you should begin to plan for where you are going to get a reliable and continuous supply of feedstock for your anaerobic digester.
+        </p>
+
+        <h3 class="govuk-heading-s">If you have a feedstock supply contract</h3>
+        <p>Include your supply contract for feedstock if you have one in place.</p>
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+     
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav", ViewData["Stage"]);
+        }
+    </div>
+</div>

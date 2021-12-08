@@ -1,0 +1,55 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model PortalViewModel<Ofgem.API.GGSS.Domain.Models.OrganisationModel>
+
+@{
+    ViewData["Title"] = Model.HasErrors ? "Error: Register organisation" : "Register organisation";
+    var formCss = Model.HasErrors ? "govuk-form-group govuk-form-group--error" : "govuk-form-group";
+    var inputCss = Model.HasErrors ? "govuk-input govuk-input--width-10 govuk-input--error" : "govuk-input govuk-input--width-10";
+}
+
+<a href="javascript:history.go(-1)" class="govuk-back-link">Back</a>
+
+@using (Html.BeginForm("Start", "Organisation", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Your company's registration number</h1>
+
+            <p class="govuk-body">
+                You can search <a href="https://find-and-update.company-information.service.gov.uk/"
+                                  target="_blank">Companies House (opens in a new tab)</a> for your Company Registration Number (CRN).
+            </p>
+
+            <div class="govuk-form-group">
+                <div id="companies-house-hint" class="govuk-hint">
+                    Your Company Registration Number (CRN) is 8 characters long.
+                </div>
+
+                <div class="@formCss">
+                    @{
+                        if (Model.HasErrors)
+                        {
+                            <span id="companies-house-error" class="govuk-error-message">
+                                Error: @Model.Errors.ToHtmlList()
+                            </span>
+                        }
+                    }
+
+                    @await Html.GovUkTextInputFor(m => m.Model.Value.RegistrationNumber, classes: @inputCss)
+                </div>
+
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.ReturnUrl)
+}
+

@@ -1,0 +1,41 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Ofgem.API.GGSS.DomainModels; 
+
+@model ExternalPortal.ViewModels.Tasks.TaskValueViewModel
+
+@{
+    ViewData["Title"] = "Stage One - Plant Location";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<form action="" method="post">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            @Model.PropertyName.GetDisplayName()
+                        </h1>
+                    </legend>
+
+                    @await Html.GovUkRadiosFor(m => (PlantLocation?)m.Value)
+
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                   {
+                       Text = "Save and continue"
+                   })
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.PropertyName)
+    @Html.HiddenFor(m => m.Value)
+</form>

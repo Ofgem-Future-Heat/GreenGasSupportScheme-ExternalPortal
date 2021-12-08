@@ -1,0 +1,65 @@
+﻿
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlantDetailsModel
+
+@{
+    ViewData["Title"] = "Stage One - Capacity Upload";
+
+    @if (Model.BackLink != null)
+    {
+        <p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+    }
+}
+
+@{
+    var formError = Model.HasError() ? "govuk-form-group--error" : "";
+}
+
+<form action="/stage-one/capacity-upload" method="post" enctype="multipart/form-data">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        Upload your connection agreement
+                    </h1>
+                </legend>
+
+                <div id="more-detail-hint" class="govuk-hint">
+                    <p class="govuk-body">This will give us an early indication that the gas network can accept the volume of biomethane you plan to inject, flow rate and capacity.</p>
+                    <p class="govuk-body">This document must be signed and show the injection points you discussed with the network.</p>
+                    <p class="govuk-body">You can only upload PDF, JPG, PNG, BMP, TIF, XLS or XLSX files. No file can be larger than 5MB.</p>
+                </div>
+            </fieldset>
+
+            <div class="govuk-form-group @formError">
+                @{
+                    if (Model.HasError())
+                    {
+                        <span id="transport-upload-error" class="govuk-error-message">
+                            @Model.Error
+                        </span>
+                    }
+                }
+                <label class="govuk-label" for="file">
+                    Upload a file
+                </label>
+                <input class="govuk-file-upload" id="file" name="file" type="file">
+            </div>
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Save and continue",
+                    Type = "Submit"
+                })
+            </div>
+            @if (Model.BackLink != null)
+            {
+                await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.BackLink);
+            }
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.ReturnUrl)
+</form>

@@ -1,0 +1,81 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlanningPermission.PlanningPermission
+
+@{
+    ViewData["Title"] = "Confirm planning permission upload";
+
+    var formError = Model.HasErrors ? "govuk-form-group--error" : "";
+    
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+@{
+    await Html.RenderPartialAsync("Components/ViewBackLink", ExternalPortal.Constants.UrlKeys.PlanningPermissionUploadLink);
+}
+
+@using (Html.BeginForm("PlanningUploadConfirm", "PlanningPermission", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Check your planning permission document upload
+                </h1>
+            </legend>
+
+            @{
+                await Html.RenderPartialAsync("Components/UploadFileDetails",
+                    new ViewDataDictionary(ViewData)
+                    {
+                        { "Id", Model.FileId },
+                        { "Name", Model.Filename },
+                        { "Size", Model.FileSizeAsString },
+    });
+            }
+
+            <div class="govuk-form-group @formError">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Is this file correct?
+                    </legend>
+                    @{
+                        if (Model.HasErrors)
+                        {
+                            <span id="planning-permission-upload-error" class="govuk-error-message">
+                                @Model.Errors.First()
+                            </span>
+                        }
+                    }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="documentAgree-yes" name="documentAgree" type="radio" value="Yes">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-yes">
+                                Yes, add this file
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="documentAgree-no" name="documentAgree" type="radio" value="No">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-no">
+                                No, I want to choose a different file
+                            </label>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </div>
+            <p>
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+                </div>
+            </p>
+
+            @{
+                await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+            }
+        </div>
+    </div>
+}

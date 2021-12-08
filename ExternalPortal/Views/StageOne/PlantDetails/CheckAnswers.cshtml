@@ -1,0 +1,131 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.InstallationModel
+
+@{
+    ViewData["Title"] = "Plant Details - Check Answers";
+
+    @if (Model.StageOne.PlantDetails.BackLink != null)
+    {
+        <p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+    }
+}
+<form action="@UrlKeys.PlantDetailsCheckAnswersLink" method="post" novalidate>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+
+            <h1 class="govuk-heading-l">Check your answers</h1>
+
+            <h2 class="govuk-heading-m">Plant details</h2>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Location
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.StageOne.PlantDetails.Location
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.PlantLocationLink?returnUrl=check-answers">
+                            Change<span class="govuk-visually-hidden"> plant location</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Connection agreement
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.StageOne.PlantDetails.CapacityCheckDocument.FileName
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.CapacityUploadConfirmLink?returnUrl=check-answers">
+                            Change<span class="govuk-visually-hidden"> connection agreement</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Plant name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.StageOne.PlantDetails.InstallationName
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.PlantNameLink?returnUrl=check-answers">
+                            Change<span class="govuk-visually-hidden"> plant name</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Anaerobic address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.LineOne</p>              
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.LineTwo</p>
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.Town</p>
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.County</p>
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.Postcode</p>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.PlantAddressLink?returnUrl=check-answers">
+                            Change<span class="govuk-visually-hidden"> anaerobic site address</span>
+                        </a>
+                    </dd>
+                </div>
+                
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Injection point address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.LineOne</p>
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.LineTwo</p>
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.Town</p>
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.County</p>
+                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.Postcode</p>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.InjectionPointAddressLink?returnUrl=check-answers">
+                            Change<span class="govuk-visually-hidden"> injection point address </span>
+                        </a>
+                    </dd>
+                </div>
+                
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Description of the equipment used to produce biomethane
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.StageOne.PlantDetails.EquipmentDescription
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.EquipmentDescriptionLink">
+                            Change<span class="govuk-visually-hidden"> description of equipment</span>
+                        </a>
+                    </dd>
+                </div>
+            </dl>
+      
+            <p>
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel
+                       {
+                           Text = "Save and continue"
+                       })
+                </div>
+                @if (Model.StageOne.PlantDetails.BackLink != null)
+                {
+                    await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.StageOne.PlantDetails.BackLink);
+                }
+            </p>
+                
+        </div>
+    </div>
+</form>

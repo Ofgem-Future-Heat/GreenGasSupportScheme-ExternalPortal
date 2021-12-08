@@ -1,0 +1,79 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlanningPermission.PlanningPermission
+
+@{
+    ViewData["Title"] = "Planning Permission";
+
+    var formError = Model.HasErrors ? "govuk-form-group--error" : "";
+    
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+@{
+    await Html.RenderPartialAsync("Components/ViewBackLink", ExternalPortal.Constants.UrlKeys.PlanningPermissionWhatYouWillNeed);
+}
+
+@using (Html.BeginForm("Index", "PlanningPermission", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                Do you have planning permission?
+                            </h1>
+                        </legend>
+
+                        <p>
+                            If planning permission is required for any of the equipment that is used to produce biomethane, you must provide evidence from the relevant planning authority that it has been granted.
+                        </p>
+
+                        <p>
+                            Read more about planning permission requirements in our <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/guidance-resource" target="_blank">guidance (opens in a new tab)</a>.
+                        </p>
+
+                        @{
+                            if (Model.HasErrors)
+                            {
+                                <span id="planning-permission-error" class="govuk-error-message">
+                                    @Model.Errors.First()
+                                </span>
+                            }
+                        }
+
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="planningPermission-yes" name="planningPermission" type="radio" value="Yes">
+                                <label class="govuk-label govuk-radios__label" for="planningPermission-yes">
+                                    Yes, we have planning permission
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="planningPermission-no" name="planningPermission" type="radio" value="No">
+                                <label class="govuk-label govuk-radios__label" for="planningPermission-no">
+                                    No, because planning permission is not required
+                                </label>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue", Type = "Submit" })
+            </div>
+
+            
+            @{
+                await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+            }
+        </div>
+    </div>
+}

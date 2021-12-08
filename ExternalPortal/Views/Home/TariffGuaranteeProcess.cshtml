@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Tariff guarantee process - Home - Green Gas Support Scheme";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Tariff guarantee process
+        </h1>
+
+        <h2 class="govuk-heading-m">
+            Stage 1
+        </h2>
+
+        <p>
+            For stage 1 of the tariff guarantee process, you'll need to provide information and evidence before we can issue a provisional tariff guarantee, budget permitting. A provisional tariff guarantee will provide confirmation of the tariff rate that will apply if full registration and all the stages of the tariff guarantee process are completed successfully.
+        </p>
+
+        <p>
+            After you submit stage 1 of the application, we'll confirm whether sufficient budget is available for the scheme year.
+        </p>
+
+        <p>
+            If sufficient budget is not available, the application will be placed in a queue until either the next financial year, or until an application is cancelled or rejected, freeing up allocation in the current financial year.
+        </p>
+
+        <p>
+            If there is budget available, we'll proceed with a review of your stage 1 application. If the application's been properly made, meets the specified requirements and is approved at stage 1, we'll issue a provisional tariff guarantee notice (PTGN).
+        </p>
+
+        <p>
+            The PTGN will state:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                that a tariff guarantee will be issued if we're satisfied that 'financial close' has been reached
+            </li>
+            <li>
+                the evidence that will be required for stage 2
+            </li>
+            <li>
+                the deadline for providing evidence of financial close – the deadline is three weeks after the date the PTGN is issued
+            </li>
+            <li>
+                the date on which the properly made stage 1 application was received by us
+            </li>
+            <li>
+                the guaranteed tariff rate which will apply if the producer becomes fully registered - this will be the applicable initial tariff rate on the date the stage 1 application was properly made
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">
+            Stage 2
+        </h2>
+
+        <p>
+            We need you to submit evidence of 'financial close'. Financial close evidence must show that funds are both available to cover the complete construction of the proposed project and are formally committed to the project.
+        </p>
+
+        <p>
+            If satisfactory evidence is provided, a full tariff guarantee notice (TGN) will be issued. The TGN will confirm the guaranteed tariff which will apply if full registration is granted.
+        </p>
+
+        <p>
+            Once you're issued with a TGN, the equipment used to produce biomethane must be commissioned within 183 days of the date you gave us on the original tariff guarantee application - or by the date the scheme closes to new applications, if this happens first.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Stage 3
+        </h2>
+
+        <p>
+            This is the application for full registration on the scheme. This may only be submitted once a TGN has been issued and the equipment used to produce biomethane has been fully commissioned.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Need help?
+        </h2>
+
+        <p>
+            If you have any questions, visit our <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy" target="_blank">website (opens in a new tab)</a> where you'll find additional guidance for the scheme.
+        </p>
+
+        <p>
+            You can also <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/green-gas-support-scheme-and-green-gas-levy-contacts" target="_blank">contact us (opens in a new tab)</a>.
+        </p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+
+</div>

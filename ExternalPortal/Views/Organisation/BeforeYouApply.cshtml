@@ -1,0 +1,165 @@
+﻿@{
+    ViewData["Title"] = "Before you create an account - Home - Green Gas Support Scheme";
+}
+
+<a href="javascript:history.go(-1)" class="govuk-back-link">Back</a>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Before you create an account
+        </h1>
+
+        <p>
+            Before you start your application for the Green Gas Support Scheme (GGSS), we need you to create an account and register your organisation.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Create an account
+        </h2>
+
+        <p>We need you to create an account so you can return to your application at different stages.</p>
+        <p>We'll ask you for an email address and phone number to create an account with us. You'll have to create a password which has to:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>be at least 8 characters long</li>
+            <li>include a capital letter</li>
+            <li>include a number</li>
+        </ul>
+        <p>It can include special characters.</p>
+
+        <h2 class="govuk-heading-m">
+            Register your organisation
+        </h2>
+        <p>
+            If you are applying on behalf of an organisation, we need you to register your organisation with us before you can submit an application for the GGSS.
+            If the organisation is registered at <a href="https://find-and-update.company-information.service.gov.uk/" target="_blank">Companies House (opens in a new tab)</a>, we'll need the Company Registration Number (CRN).
+        </p>
+
+        <h3 class="govuk-heading-s">
+            Authorised signatory
+        </h3>
+        <p>
+            The authorised signatory is a person who's been given authority to act on behalf of an applicant for the purposes of the Green Gas Support Scheme (GGSS) to:
+
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                set up and manage an account with Ofgem
+            </li>
+            <li>
+                submit an application for a tariff guarantee
+            </li>
+            <li>
+                submit an application for registration
+            </li>
+        </ul>
+        <p>
+            For example, the authorised signatory could be:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                a sole trader
+            </li>
+            <li>
+                a director of the organisation that owns the installation,
+            </li>
+            or
+            <li>
+                an employee who's authorised by a director of the organisation that owns the installation
+            </li>
+        </ul>
+
+        <p>
+            The authorised signatory <strong>cannot</strong> be a consultant making the application on behalf of the applicant.
+        </p>
+
+        <p>
+            The authorised signatory is responsible for:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                verifying all information relating to any applications made by the applicant for the purposes of getting a tariff guarantee or being
+            </li>
+            <li>
+                signing declarations, including confirming information entered by any additional users before it's submitted to Ofgem
+            </li>
+        </ul>
+
+        <p>
+            Because of the responsibility of this role, we'll ask for some personal details and ask for documents to confirm their identity. We'll need their:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                full name
+            </li>
+            <li>
+                email address
+            </li>
+            <li>
+                home address
+            </li>
+            <li>
+                phone number
+            </li>
+        </ul>
+
+        <p>
+            We'll also need to see each of these:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                driving licence, identity card or passport - as photo identification
+            </li>
+            <li>
+                a utility bill or similar - as proof of their home address
+            </li>
+            <li>
+                a letter of authorisation - to prove they have the authority to act on behalf of the organisation
+            </li>
+        </ul>
+
+        <h3 class="govuk-heading-s">
+            Letter of authorisation
+        </h3>
+
+        <p>
+            A letter of authorisation (LOA) is a document which confirms who the authorised signatory for an organisation is and that they have the authority to act on the organisation's behalf.
+        </p>
+        <p>
+            The LOA must be uploaded when you register your organisation with Ofgem, before starting your application for GGSS.
+        </p>
+        <p>
+            The details of the authorised signatory given on the LOA will be cross-checked against the personal details the authorised signatory has provided.
+        </p>
+        <p>
+            These details may be used for the purposes of fraud prevention.
+        </p>
+        <p>
+            We've <a href="https://www.ofgem.gov.uk/publications/green-gas-support-scheme-letter-authorisation" target="_blank">more details on the LOA and a template for you to use (opens in a new tab)</a>.
+        </p>
+        <p>
+            Before you start your application for the Green Gas Support Scheme (GGSS), we need you to create an account and register your organisation.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Need help?
+        </h2>
+
+        <p>
+            If you have any questions, visit our <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy" target="_blank">website (opens in a new tab)</a> where you'll find additional guidance for the scheme.
+        </p>
+
+        <p>
+            You can also <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/green-gas-support-scheme-and-green-gas-levy-contacts" target="_blank">contact us (opens in a new tab)</a>.
+        </p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+</div>

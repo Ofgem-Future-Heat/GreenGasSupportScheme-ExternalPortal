@@ -1,0 +1,9 @@
+﻿@model ExternalPortal.ViewModels.Shared.Components.MultiSelectCheckboxViewModel
+
+<div class="govuk-checkboxes__item govuk-checkboxes--small moj-multi-select__checkbox">
+    <input type="checkbox" class="govuk-checkboxes__input @(Model.Selected ? "" : Model.SelectionClass)"
+           name="@Model.Name" value="@Model.Id" id="@Model.Id" checked="@Model.Selected" disabled="@Model.Selected">
+    <label class="govuk-label govuk-checkboxes__label" for="@Model.Id">
+        <span class="govuk-visually-hidden">@Model.Id</span>
+    </label>
+</div>

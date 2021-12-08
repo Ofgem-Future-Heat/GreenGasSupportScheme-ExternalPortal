@@ -1,0 +1,53 @@
+﻿@model ExternalPortal.ViewModels.InstallationModel
+
+<li>
+    <h2 class="app-task-list__section">
+        <span class="app-task-list__section-number">2. </span> Tell us about your project finances
+    </h2>
+
+    <ul class="app-task-list__items">
+        <li class="app-task-list__item">
+            <a class="task-name" href="/isae-3000/what-you-will-need" aria-describedby="read-declaration-completed">
+                @Model.StageTwo.Isae3000AuditModel.Type.GetDisplayName()
+            </a>
+            <strong class="govuk-tag app-task-list__tag @Model.StageTwo.Isae3000AuditModel.State.GetDisplayTag()" id="ISAE3000Audit-status">
+                @Model.StageTwo.Isae3000AuditModel.State.GetDisplayName()
+            </strong>
+        </li>
+
+        <li class="app-task-list__item">
+            <a class="task-name" href="@UrlKeys.SupportingEvidenceWhatYouWillNeed" aria-describedby="read-declaration-completed">
+                @Model.StageTwo.AdditionalFinancialEvidence.Type.GetDisplayName()
+            </a>
+            <strong class="govuk-tag app-task-list__tag @Model.StageTwo.AdditionalFinancialEvidence.State.GetDisplayTag()" id="AdditionalFinancialEvidence-status">
+                @Model.StageTwo.AdditionalFinancialEvidence.State.GetDisplayName()
+            </strong>
+        </li>
+
+        <br />
+
+        @if (Model.Application.Value.Status == ApplicationStatus.StageTwoSubmitted)
+        {
+        }
+        else if (Model.Application.Value.Status == ApplicationStatus.StageOneSubmitted)
+        {
+            if (Model.StageTwo.Isae3000AuditModel.State == TaskStatus.Completed && Model.StageTwo.AdditionalFinancialEvidence.State == TaskStatus.Completed)
+            {
+                <p class="govuk-body">By clicking 'accept and submit', you're confirming that, to the best of your knowledge, the details you're providing are correct.</p>
+                <form class="" action="submit/stage-two-confirmation" method="post">
+                    <input type="hidden" name="stage-two-completed" value="true">
+                    <button class="govuk-button" data-module="govuk-button">
+                        Accept and submit
+                    </button>
+                </form>
+            }
+            else
+            {
+                <p class="govuk-body">You cannot submit until you have completed all the tasks in this section</p>
+                <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+                    Accept and submit
+                </button>
+            }
+        }
+    </ul>
+</li>

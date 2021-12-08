@@ -1,0 +1,65 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Eligibility.EligibilityFlow
+@{
+    var error = !ViewData.ModelState.IsValid ? "Error:" : "";
+
+    ViewData["Title"] = $"{@error} Has the equipment been used to secure an NDRHI tariff guarantee? - Check eligibility - Green Gas Support Scheme";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var formError = Model.HasError ? "govuk-form-group--error" : "";
+}
+
+@await Html.GovUkErrorSummary(ViewData.ModelState)
+
+@using (Html.BeginForm("FinancialSupport", "Eligibility", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+                Has the equipment been used to secure an NDRHI tariff guarantee?
+            </h1>
+        </legend>
+
+        <div id="more-detail-hint" class="govuk-hint">
+            By this, we mean are you planning on producing biomethane using equipment which has been used for the purposes of applying for a tariff guarantee on the NDRHI scheme? The only exception to this might be if your application to the NDRHI was withdrawn before the GGSS regulations came into force.
+        </div>
+
+        <div class="govuk-form-group @formError">
+            @{
+                if (Model.HasError)
+                {
+                    <span id="select-option-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error</span>
+                        @Model.Error
+                    </span>
+                }
+            }
+            <div class="govuk-radios govuk-radios--inline">
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="FinancialSupport-yes" name="FinancialSupport" type="radio" value="Yes">
+                    <label class="govuk-label govuk-radios__label" for="documentAgree-yes">
+                        Yes
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="FinancialSupport-no" name="FinancialSupport" type="radio" value="No">
+                    <label class="govuk-label govuk-radios__label" for="documentAgree-no">
+                        No
+                    </label>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="govuk-button-group">
+            @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+        </div>
+    </div>
+</div>
+}

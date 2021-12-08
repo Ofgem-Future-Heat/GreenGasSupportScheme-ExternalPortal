@@ -1,0 +1,35 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model PortalViewModel<OrganisationModel>
+
+@{
+    ViewData["Title"] = "SubmittedForReview";
+    Layout = "~/Views/Shared/Layouts/_ConfirmationPageLayout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+@await Html.GovUkPanel(new PanelViewModel
+        {
+        TitleText = $"{@Model.Model.Value.Name.ToUpper()} submitted for review",
+        Html = @<text>
+        <div>Your reference number</div>
+        <div><strong>@Model.Model.Value.ReferenceNumber</strong></div>
+        </text>
+
+})
+
+<p>
+    We've sent a confirmation email to <strong>@Model.Model.ResponsiblePeople.First().User?.Value.EmailAddress</strong>.
+</p>
+
+<h2 class="govuk-heading-m">What happens next</h2>
+
+<p class="govuk-body">
+    We'll review your submission. This can take up to 14 days.
+</p>
+
+<p class="govuk-body">
+    While you’re waiting for us to get back to you about registering your organisation, you can apply for stage 1 of the Green Gas Support Scheme now at <a class="govuk-link" href="/dashboard">your dashboard</a>.
+</p>

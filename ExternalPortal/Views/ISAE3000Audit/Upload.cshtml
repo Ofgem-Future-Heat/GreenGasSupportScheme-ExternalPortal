@@ -1,0 +1,53 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Tasks.Isae3000AuditModel
+@{
+    ViewData["Title"] = "ISAE3000 Audit upload";
+
+    var formError = Model.HasError() ? "govuk-form-group--error" : "";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+@using (Html.BeginForm("Upload", "Isae3000Audit", new { ApplicationId = applicationId }, FormMethod.Post, true, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">
+                Upload your ISAE 3000 audit document and supporting documents
+            </h1>
+            <div id="more-detail-hint" class="govuk-hint">
+                You must provide the documents provided to your auditor.
+                You can only upload PDF, JPG, PNG, BMP, TIF, XLS or XLSX files. No file can be larger than 5MB.
+            </div>
+            <div class="govuk-form-group @formError">
+                @{
+                    if (Model.HasError())
+                    {
+                        <span id="transport-upload-error" class="govuk-error-message">
+                            @Model.Error
+                        </span>
+                    }
+                }
+                <label class="govuk-label" for="isae3000File">
+                    Upload a file
+                </label>
+                <input type="file" class="govuk-file-upload" id="isae3000File" name="isae3000File" aria-describedby="isae3000File-hint">
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-button-group">
+        @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+    </div>
+}
+
+@{
+    await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+}
+

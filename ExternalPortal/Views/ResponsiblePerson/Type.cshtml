@@ -1,0 +1,60 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.ResponsiblePersonIndexViewModel
+
+
+@{
+    var error = !ViewData.ModelState.IsValid ? "Error:" : "";
+
+    ViewData["Title"] = $"{@error} Add Responsible Person";
+
+    @if (Model.BackLink != null)
+    {
+        <p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+    }
+}
+
+@await Html.GovUkErrorSummary(ViewData.ModelState)
+
+@using (Html.BeginForm("Type", "ResponsiblePerson", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Are you the authorised signatory for this organisation?
+                        </h1>
+                    </legend>
+
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                Help with authorised signatory
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">An authorised signatory is a person who's been given authority to act on behalf of a given organisation.</p>
+                            <p class="govuk-body">We expect the authorised signatory to be an employee of the organisation that owns the installation.</p>
+                        </div>
+                    </details>
+                    
+                    <div class="govuk-radios govuk-radios--inline">
+                        @await Html.GovUkRadiosFor(m => m.ResponsiblePersonType)
+                    </div>
+
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+}
+

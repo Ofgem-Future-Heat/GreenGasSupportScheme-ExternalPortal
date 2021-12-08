@@ -1,0 +1,13 @@
+﻿@model ExternalPortal.ViewModels.Shared.Components.PageHeadingViewModel
+
+<h1 class="govuk-heading-xl">
+    @if (!string.IsNullOrEmpty(Model.SuperHeading))
+    {
+        <span class="govuk-caption-l">@Model.SuperHeading</span>
+    }
+    @Model.Heading
+    @if (!string.IsNullOrEmpty(Model.SubHeading))
+    {
+        <span class="govuk-caption-l">@Model.SubHeading</span>
+    }
+</h1>

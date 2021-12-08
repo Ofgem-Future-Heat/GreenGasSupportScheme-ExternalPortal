@@ -1,0 +1,64 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Eligibility.EligibilityFlow
+@{
+    var error = !ViewData.ModelState.IsValid ? "Error:" : "";
+
+    ViewData["Title"] = $"{@error} Do you plan to produce biomethane for injection into the gas grid? - Check eligibility - Green Gas Support Scheme";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var formError = Model.HasError ? "govuk-form-group--error" : "";
+}
+
+@await Html.GovUkErrorSummary(ViewData.ModelState)
+
+@using (Html.BeginForm("GasInjection", "Eligibility", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div>
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        Do you plan to produce biomethane for injection into the gas grid?
+                    </h1>
+                </legend>
+
+                <div class="govuk-form-group @formError">
+                    @{
+                        if (Model.HasError)
+                        {
+                            <span id="select-option-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error</span>
+                                @Model.Error
+                            </span>
+                        }
+                    }
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="GasInjection-yes" name="GasInjection" type="radio" value="Yes">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="GasInjection-no" name="GasInjection" type="radio" value="No">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-no">
+                                No
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+
+        </div>
+    </div>
+}

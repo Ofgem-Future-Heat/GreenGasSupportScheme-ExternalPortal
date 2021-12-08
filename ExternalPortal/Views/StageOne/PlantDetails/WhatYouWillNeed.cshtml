@@ -1,0 +1,38 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlantDetailsModel
+@{
+    ViewData["Title"] = "Tell us about your plant";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">Tell us about your site</h1>
+
+        <p class="govuk-body">
+            Give us the biomethane installation's:
+            <ul class="govuk-list govuk-list--bullet">
+                <li>name</li>
+                <li>country - England, Scotland or Wales</li>
+                <li>address</li>
+                <li>connection agreement</li>
+                <li>a description of the equipment used to produce biomethane</li>
+            </ul>
+
+            <div class="govuk-button-group">
+                <a href="@ExternalPortal.Constants.UrlKeys.PlantNameLink" class="govuk-button">Continue</a>
+            </div>
+
+            @if (Model.BackLink != null)
+            {
+                await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.BackLink);
+            }
+        </p>
+
+    </div>
+</div>
+

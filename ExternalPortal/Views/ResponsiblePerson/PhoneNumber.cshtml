@@ -1,0 +1,39 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.ResponsiblePersonDetailViewModel
+
+@{
+    ViewData["Title"] = "Enter your phone number";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+@using (Html.BeginForm("PhoneNumber", "ResponsiblePerson", FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        What is your telephone number?
+                    </h1>
+                </legend>
+                
+                <div class="govuk-form-group">
+                    @await Html.GovUkTextInputFor(m => m.PhoneNumber,
+                    classes: "govuk-input",
+                    labelOptions: new LabelViewModel { Text = "UK telephone number" })
+                </div>           
+                @Html.HiddenFor(m => m.ReturnUrl)
+            </fieldset>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel
+                   {
+                       Text = "Save and continue"
+                   })
+            </div>
+        </div>
+    </div>
+}

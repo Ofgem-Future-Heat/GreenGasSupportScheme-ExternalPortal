@@ -1,0 +1,58 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model StageOneModel
+@{
+    ViewData["Title"] = "Stage One - Start Date";
+}
+<form action="start-date" method="post" novalidate >
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            When do you expect to start injecting biomethane?
+                        </h1>
+                    </legend>
+
+                    <div class="govuk-inset-text">
+                        You must tell us if the capacity of the station changes between planning and commissioning stages. Variations within ten per cent are allowed. 
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <div id="start-hint" class="govuk-hint">
+                            For example, 27 03 2022
+                        </div>
+                        
+                        <div class="govuk-date-input">
+                            <div class="govuk-date-input__item">
+                                @await Html.GovUkTextInputFor(m => m.InjectionStartDay,
+                                    classes: "govuk-input--width-2",
+                                    labelOptions: new LabelViewModel { Text = "Day", Classes = "govuk-label" })
+                            </div>
+                            <div class="govuk-date-input__item">
+                                @await Html.GovUkTextInputFor(m => m.InjectionStartMonth,
+                                    classes: "govuk-input--width-2",
+                                    labelOptions: new LabelViewModel { Text = "Month", Classes = "govuk-label" })
+                            </div>
+                            <div class="govuk-date-input__item">
+                                @await Html.GovUkTextInputFor(m => m.InjectionStartYear,
+                                    classes: "govuk-input--width-4",
+                                    labelOptions: new LabelViewModel { Text = "Year", Classes = "govuk-label" })
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                        {
+                            Text = "Continue"
+                        })
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+</form>

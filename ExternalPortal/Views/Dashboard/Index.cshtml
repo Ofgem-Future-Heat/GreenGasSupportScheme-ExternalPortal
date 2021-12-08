@@ -1,0 +1,48 @@
+﻿@using ExternalPortal.Controllers
+@model ExternalPortal.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Tasklist";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+@Html.AntiForgeryToken()
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">@Model.UserDisplayName</h1>
+    </div>
+
+    <div class="govuk-grid-column-full">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Your organisations</th>
+                    <th scope="col" class="govuk-table__header">Number of installations</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var userOrganisation in Model.Organisations)
+                {
+                    @if (!String.IsNullOrEmpty(userOrganisation.Name))
+                    {
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">@Html.ActionLink(userOrganisation.Name, "YourOrganisations", "Dashboard", new { OrganisationId = userOrganisation.Id })</th>
+                            <td class="govuk-table__cell">@userOrganisation.NumberOfInstallations</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        @if (!Model.Organisations.Any())
+        {
+            <p class="govuk-body">You need to <a href="@UrlKeys.RegisterAnOrganisation">register an organisation</a></p>
+        }
+        else
+        {
+            <p class="govuk-body"><a href="@UrlKeys.RegisterAnOrganisation">Add another organisation</a></p>
+        }
+    </div>
+</div>
+
+

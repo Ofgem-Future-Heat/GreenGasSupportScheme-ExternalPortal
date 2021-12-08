@@ -1,0 +1,30 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@{
+    ViewData["Title"] = "Provisional Tariff - Introduction";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            What you'll need to apply for a provisional tariff guarantee
+        </h1>
+        <div class="govuk-inset-text">
+            <ul class="govuk-list govuk-list--bullet">
+                <li> Plant location</li>
+                <li>Connection agreement document</li>
+                <li>Plant name and address</li>
+                <li>Planning permission documents and your planning to be approved on a local authority portal</li>
+                <li>Gas volume estimates you expect to produce and start date</li>
+            </ul>
+        </div>
+        <div class="govuk-button-group">
+            @await Html.GovUkButton(new ButtonViewModel
+       {
+           Text = "Start your provisional tariff guarantee application",
+                Href = "/stage-one/plant-location"
+       })
+        </div>
+    </div>
+
+</div>

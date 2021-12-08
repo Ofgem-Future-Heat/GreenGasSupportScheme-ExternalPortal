@@ -1,0 +1,55 @@
+﻿
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model StageOneModel
+@{
+    ViewData["Title"] = "Stage One - Feedstock Supply Upload Confirm";
+}
+@using (Html.BeginForm("FeedstockUploadConfirm", "FeedstockDetails", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">
+                Check your feedstock supply document upload
+            </h1>
+
+            <div class="govuk-inset-text">
+                <strong>@Model.FeedstockUploadFileName</strong>
+            </div>
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        Check your feedstock supply document upload
+                    </h1>
+                </legend>
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="documentAgree-yes" name="documentAgree" type="radio" value="Yes">
+                        <label class="govuk-label govuk-radios__label" for="documentAgree-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="documentAgree-no" name="documentAgree" type="radio" value="No">
+                        <label class="govuk-label govuk-radios__label" for="documentAgree-no">
+                            No, I want to upload a different document
+                        </label>
+                    </div>
+
+                </div>
+
+            </fieldset>
+            <p>
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel
+                    {
+                        Text = "Continue",
+                        Type = "submit"
+                    })
+                </div>
+            </p>
+        </div>
+    </div>
+}

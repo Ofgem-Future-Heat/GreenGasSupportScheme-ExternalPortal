@@ -1,0 +1,43 @@
+﻿
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model ExternalPortal.ViewModels.Value.FileUploadViewModel
+@{
+    ViewData["Title"] = $"Upload - {Model.PropertyName.GetDisplayName()}";
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+@using (Html.BeginForm(Model.SaveActionName, Model.TaskType.ToString(), FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken() 
+    
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        @Model.PropertyName.GetDisplayName()
+                    </h1>
+                </legend>
+
+                <div id="more-detail-hint" class="govuk-hint">
+                    <p class="govuk-body">You can upload your documents as scanned copies or photos of the originals</p>
+                    <p class="govuk-body">You can only upload PDF, JPG, PNG, BMP, TIF, XLS or XLSX files. No file can be larger than 5MB.</p>
+                </div>
+            </fieldset>
+
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="file">
+                    Upload a file
+                </label>
+                <input class="govuk-file-upload" id="file" name="file" type="file">
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue", Type = "Submit" })
+            </div>
+            <p>
+                @Html.ActionLink("Return to your application", "Index", "TaskList", null, new { @class = "govuk-link" })
+            </p>
+        </div>
+    </div>
+}

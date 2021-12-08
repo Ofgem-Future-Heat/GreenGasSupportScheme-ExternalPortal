@@ -1,0 +1,80 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Shared.AddressViewModel
+
+@{
+
+    var error = !ViewData.ModelState.IsValid ? "Error:" : "";
+    
+    ViewData["Title"] = $"{@error} Stage One - Plant Address";
+
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+<p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+
+@await Html.GovUkErrorSummary(ViewData.ModelState)
+
+<form action="@UrlKeys.PlantAddressLink" method="post">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Where is the anaerobic digestion plant?
+                        </h1>
+                    </legend>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextInputFor(m => m.LineOne,
+                       classes: "govuk-input",
+                       labelOptions: new LabelViewModel { Text = " Building and street" })
+
+                    </div>
+
+                    <div class="govuk-form-group">
+
+                        @await Html.GovUkTextInputFor(m => m.LineTwo,
+                      classes: "govuk-input",
+                      labelOptions: new LabelViewModel { Text = "Building and street line two", Classes = "govuk-visually-hidden" })
+                    </div>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextInputFor(m => m.Town,
+                      classes: "govuk-input govuk-input--width-20",
+                      labelOptions: new LabelViewModel { Text = "Town or city" })
+
+                    </div>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextInputFor(m => m.County,
+                     classes: "govuk-input govuk-input--width-20",
+                     labelOptions: new LabelViewModel { Text = "County" })
+
+                    </div>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextInputFor(m => m.Postcode,
+                    classes: "govuk-input govuk-input--width-20",
+                    labelOptions: new LabelViewModel { Text = "Postcode" })
+                    </div>
+
+                    @Html.HiddenFor(m => m.ReturnUrl)
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                       {
+                           Text = "Save and continue"
+                       })
+                    </div>
+                    @{
+                        await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</form>

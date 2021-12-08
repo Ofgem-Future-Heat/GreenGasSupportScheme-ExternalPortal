@@ -1,0 +1,25 @@
+﻿@model ExternalPortal.ViewModels.InstallationModel
+@{
+    ViewData["Title"] = "Tasklist";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+@Html.AntiForgeryToken()
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Green Gas Support Scheme Application</h1>
+
+        <ol class="app-task-list">
+            @{
+                await Html.RenderPartialAsync("_StageOneTaskItems", Model);
+                await Html.RenderPartialAsync("_StageTwoTaskItems", Model);
+                await Html.RenderPartialAsync("_StageThreeTaskItems", Model);
+            };
+        </ol>
+
+    </div>
+</div>
+
+

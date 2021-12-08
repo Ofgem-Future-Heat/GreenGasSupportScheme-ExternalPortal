@@ -1,0 +1,81 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model ExternalPortal.ViewModels.PlantDetailsModel
+
+@{
+    ViewData["Title"] = "Check your gas network capacity document upload - Tell us about your site - Green Gas Support Scheme";
+
+    var formError = Model.HasError() ? "govuk-form-group--error" : "";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+@using (Html.BeginForm("CapacityUploadConfirm", "StageOne", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Check your connection agreement document upload
+                </h1>
+            </legend>
+
+            @{
+                await Html.RenderPartialAsync("Components/UploadFileDetails",
+                    new ViewDataDictionary(ViewData)
+                    {
+                        { "Id", Model.CapacityCheckDocument.FileId },
+                        { "Name", Model.CapacityCheckDocument.FileName },
+                        { "Size", Model.CapacityCheckDocument.FileSizeAsString },
+            });
+            }
+
+            <div class="govuk-form-group @formError">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Is this file correct?
+                    </legend>
+                    @{
+                        if (Model.HasError())
+                        {
+                            <span id="transport-upload-error" class="govuk-error-message">
+                                @Model.Error
+                            </span>
+                        }
+                    }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="documentAgree-yes" name="documentAgree" type="radio" value="Yes">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-yes">
+                                Yes, add this file
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="documentAgree-no" name="documentAgree" type="radio" value="No">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-no">
+                                No, I want to upload a different file
+                            </label>
+                        </div>
+
+                    </div>
+                    @Html.HiddenFor(m => m.ReturnUrl)
+                </fieldset>
+            </div>
+            <p>
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel
+                    {
+                        Text = "Save and continue",
+                                Type = "submit"
+                    })
+                </div>
+                @if (Model.BackLink != null)
+                {
+                    await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.BackLink);
+                }
+            </p>
+        </div>
+    </div>
+}

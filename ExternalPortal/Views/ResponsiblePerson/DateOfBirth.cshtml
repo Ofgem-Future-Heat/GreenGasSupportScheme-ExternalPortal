@@ -1,0 +1,42 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.ResponsiblePersonDetailViewModel
+
+@{
+    ViewData["Title"] = "Responsible Person Date Of Birth";
+}
+
+<a href="javascript:history.go(-1)" class="govuk-back-link">Back</a>
+
+@using (Html.BeginForm("DateOfBirth", "ResponsiblePerson", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <div class="govuk-date-input" id="dob">
+                    <div class="govuk-date-input__item">
+                        @await Html.GovUkDateInputFor(m => m.DateOfBirth,
+                            fieldsetOptions: new FieldsetViewModel
+                            {
+                                Legend = new LegendViewModel
+                                {
+                                    Text = "What is your date of birth?",
+                                    Classes = "govuk-fieldset__legend govuk-fieldset__legend--l"
+                                }
+                            },
+                            hintOptions: new HintViewModel { Text = "For example, 28 3 2007" })
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.ReturnUrl)
+            <p>
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+                </div>
+            </p>
+        </div>
+    </div>
+}

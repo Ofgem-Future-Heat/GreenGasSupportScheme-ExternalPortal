@@ -1,0 +1,49 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlantDetailsModel
+
+@{
+    ViewData["Title"] = "Stage One - Plant Name";
+
+    @if (Model.BackLink != null)
+    {
+        <p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+    }
+}
+
+<form action="@UrlKeys.PlantNameLink" method="post">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            What is the name of the biomethane installation?
+                        </h1>
+                    </legend>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextInputFor(m => m.InstallationName,
+                        classes: "govuk-input",
+                        labelOptions: new LabelViewModel { Text = "Name of the installation" })
+                    </div>
+                @Html.HiddenFor(m => m.ReturnUrl)
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                   {
+                       Text = "Save and continue"
+                   })
+                    </div>
+                    @if (Model.BackLink != null)
+                    {
+                        await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.BackLink);
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</form>

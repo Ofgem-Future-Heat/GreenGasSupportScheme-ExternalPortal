@@ -1,0 +1,18 @@
+﻿@model ExternalPortal.ViewModels.Shared.Components.BackLinkViewModel
+
+@if (!string.IsNullOrEmpty(Model.Href))
+{
+    <a href="@Model.Href" class="govuk-back-link">
+        Back
+    </a>
+}
+else
+{
+    <a asp-area="@Model.Area"
+       asp-controller="@Model.Controller"
+       asp-action="@Model.Action"
+       asp-all-route-data="@Model.ReferenceParams"
+       class="govuk-back-link">
+        Back
+    </a>
+}

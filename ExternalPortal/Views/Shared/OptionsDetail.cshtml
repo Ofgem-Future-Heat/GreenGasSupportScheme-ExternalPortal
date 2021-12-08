@@ -1,0 +1,76 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Value.OptionsViewModel
+
+@{
+    ViewData["Title"] = Model.Heading;
+    var formError = String.IsNullOrEmpty(Model.Error) ? "" : "govuk-form-group--error";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+@using (Html.BeginForm(Model.SaveActionName, Model.ControllerName ?? Model.TaskType.ToString(), FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            @Model.Heading
+                        </h1>
+                    </legend>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.GreenPanelText))
+                    {
+                        <div class="govuk-inset-text">
+                            <strong>@Model.GreenPanelText</strong>
+                        </div>
+                    }
+                    
+                    @if (!string.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            <div id="start-hint" class="govuk-hint">
+                                @Model.Description
+                            </div>
+                        }
+
+                    <div class="govuk-form-group @formError">
+                        <fieldset class="govuk-fieldset">
+                            <div class="govuk-radios">
+                                @{
+                                    if (!String.IsNullOrEmpty(Model.Error))
+                                    {
+                                        <span id="transport-upload-error" class="govuk-error-message">
+                                            @Model.Error
+                                        </span>
+                                    }
+                                }
+                                @foreach (var opt in Model.Options)
+                                {
+                                    <div class="govuk-radios__item">
+
+                                        @Html.RadioButtonFor(model => Model.Selected.Value, opt.Value, new { @checked = Model?.Selected?.Value == opt.Value, @class = "govuk-radios__input" })
+
+                                        <label class="govuk-label govuk-radios__label">
+                                            @opt.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+                    </div>
+                </p>
+                <p>
+                    @Html.ActionLink("Return to your application", "Index", "TaskList", null, new { @class = "govuk-link" })
+                </p>
+            </div>
+        </div>
+    </div>
+}

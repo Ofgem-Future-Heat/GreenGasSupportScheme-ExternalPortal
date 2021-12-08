@@ -1,0 +1,72 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+@using (Html.BeginForm("OrganisationSubmitted", "Notifications", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">Organisation submitted</h1>
+                        </legend>
+                        <p>
+                            @Html.Label("emailAddress", "Email address")
+                            @Html.TextBox("emailAddress")
+                        </p>
+                        <p>
+                            @Html.Label("fullName", "Full name")
+                            @Html.TextBox("fullName")
+                        </p>
+                        <p>
+                            @Html.Label("referenceNumber", "Reference number")
+                            @Html.TextBox("referenceNumber")
+                        </p>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("StageOneSubmitted", "Notifications", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">Stage one submitted</h1>
+                        </legend>
+                        <p>
+                            @Html.Label("emailAddress", "Email address")
+                            @Html.TextBox("emailAddress")
+                        </p>
+                        <p>
+                            @Html.Label("fullName", "Full name")
+                            @Html.TextBox("fullName")
+                        </p>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+        </div>
+    </div>
+}

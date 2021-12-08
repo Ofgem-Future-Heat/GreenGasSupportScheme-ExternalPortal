@@ -1,0 +1,42 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using ExternalPortal.Helpers;
+
+@model ExternalPortal.ViewModels.Value.StringViewModel
+
+@{
+    ViewData["Title"] = Model.PropertyName.GetDisplayName();
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+    var heading = @Model.Heading ?? @Model.PropertyName.GetDisplayName();
+    var description = @Model.Description ?? @Resources.Descriptions[Model.PropertyName];
+}
+
+@using (Html.BeginForm(Model.SaveActionName, Model.TaskType.ToString(), FormMethod.Post, new { vm = Model }))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading"> @heading </h1>
+                </legend>
+
+                <p>@description</p>
+
+                <div class="govuk-form-group">
+                    @await Html.GovUkTextInputFor(m => m.Value, pattern: Model.Regex,
+                        classes: "govuk-input govuk-input--width-20",
+                        labelOptions: new LabelViewModel { Text = Resources.Labels[Model.PropertyName] })
+                </div>
+                @Html.HiddenFor(m => m.ReturnUrl)
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+                    </div>
+                </p>
+                <p>
+                    @Html.ActionLink("Return to your application", "Index", "TaskList", null, new { @class = "govuk-link" })
+                </p>
+            </div>
+        </div>
+    </div>
+}

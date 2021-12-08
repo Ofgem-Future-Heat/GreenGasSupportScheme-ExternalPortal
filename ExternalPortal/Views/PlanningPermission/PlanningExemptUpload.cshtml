@@ -1,0 +1,53 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlanningPermission.PlanningPermission
+
+@{
+    ViewData["Title"] = "Planning Permission Exemption";
+
+    var formError = Model.HasErrors ? "govuk-form-group--error" : "";
+    
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+@{
+    await Html.RenderPartialAsync("Components/ViewBackLink", ExternalPortal.Constants.UrlKeys.PlanningPermissionDoYouHave);
+}
+
+@using (Html.BeginForm("PlanningExemptUpload", "PlanningPermission", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Provide a statement as to why planning permission is not required
+                </h1>
+            </legend>
+            
+            <div class="govuk-form-group @formError">
+                @{
+                    if (Model.HasErrors)
+                    {
+                        <span id="planning-permission-exempt-upload-error" class="govuk-error-message">
+                            @Model.Errors.First()
+                        </span>
+                    }
+                }
+                
+                @await Html.GovUkTextAreaFor(m => m.ExemptionStatement)
+
+            </div>
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Continue" })
+            </div>
+
+            @{
+                await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+            }
+        </div>
+    </div>
+}

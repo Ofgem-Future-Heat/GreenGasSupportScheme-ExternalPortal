@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] – Green Gas Support Scheme</title>
+    <link rel="stylesheet" href="~/css/step-by-step-nav.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://www.ofgem.gov.uk/themes/custom/numiko/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.ofgem.gov.uk/themes/custom/numiko/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://www.ofgem.gov.uk/themes/custom/numiko/favicons/favicon-16x16.png">
+
+</head>
+<body class="govuk-template__body">
+<a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+    <header class="govuk-header" role="banner">
+        <div class="govuk-header__container govuk-width-container">
+            <div class="govuk-header__logo">
+                <a href="/" class="govuk-header__logo-link">
+                    <img src="~/images/logo.png" class="govuk-header__logo-image" alt="Ofgem logo" />
+                </a>
+            </div>
+            <div class="govuk-header__content govuk-header__navigation">
+                <a href="/" class="govuk-header__link govuk-header__link--service-name">
+                    Green Gas Support Scheme
+                </a>
+                <nav>
+                    <partial name="_LoginPartial" />
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    @RenderBody()
+
+    <footer class="govuk-footer">
+        <div class="govuk-width-container">
+            <div class="govuk-footer__meta">
+                <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+                    <h2 class="govuk-visually-hidden">Ofgem links</h2>
+                    <ul class="govuk-footer__inline-list">
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="/home/accessibility">
+                                Accessibility
+                            </a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/green-gas-support-scheme-and-green-gas-levy-contacts" target="_blank">
+                                Contact us
+                            </a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="https://www.ofgem.gov.uk" target="_blank">
+                                Ofgem website
+                            </a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="https://www.ofgem.gov.uk/publications/green-gas-support-scheme-privacy-notice" target="_blank">
+                                Privacy
+                            </a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="/home/terms-and-conditions">
+                                Terms and Conditions
+                            </a>
+                        </li>
+                    </ul>
+                    <div>&copy; Ofgem 2021</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @*<script>
+            document.body.className = document.body.className ? document.body.className + ' js-enabled' : 'js-enabled';
+            window.GOVUKFrontend.initAll();
+        </script>
+        <script src="~/js/site.js" asp-append-version="true"></script>*@
+
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/govuk-frontend/js/govuk-frontend.js"></script>
+        <script src="~/lib/moj-frontend/js/moj-frontend.js"></script>*@
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/all.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/step-by-step-nav.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

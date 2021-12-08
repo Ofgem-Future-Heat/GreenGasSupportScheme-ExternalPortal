@@ -1,0 +1,152 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Apply for financial support to inject biomethane into the gas grid - Home - Green Gas Support Scheme";
+    var signupUrl = Configuration.GetValue<string>("AzureAdB2C:SignUpUrl");
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Apply for financial support to inject biomethane into the gas grid
+        </h1>
+
+        <p>
+            The Green Gas Support Scheme (GGSS) provides financial incentives for eligible anaerobic digestion biomethane installations to increase the proportion of green gas in the gas grid.
+        </p>
+
+        <p>
+            Once registered on the GGSS, eligible biomethane producers can claim payments for producing biomethane using anaerobic digestion and injecting it into the gas grid.
+        </p>
+
+        <p>
+            These payments are:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                based on the volume of eligible biomethane you inject into the gas grid
+            </li>
+            <li>
+                made quarterly over 15 years
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">Tariff guarantee process</h2>
+
+        <p>
+            Tariff guarantees will be a compulsory stage of applying to the GGSS. Tariff guarantees will allow prospective
+            participants to apply to secure a fixed tariff rate before their installation is commissioned and fully
+            registered onto the scheme. Read more about the <a href="@UrlKeys.TariffGuaranteeProcess">tariff guarantee process</a>.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Before you apply
+        </h2>
+
+        <p>
+            Before you can start your application, you’ll need to:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                read our guidance on <a href="@UrlKeys.RegisterBeforeYouApply">Before you create an account</a>
+            </li>
+            <li>
+                <a href="@signupUrl">create your account</a>
+            </li>
+            <li>
+                <a href="/dashboard">register your organisation</a>
+            </li>
+        </ul>
+
+        <p>
+            Once you’ve created your account and registered your organisation, there are 3 stages to the application process. You can read what you’ll need to do for each stage:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                <a href="@UrlKeys.ApplyingStageOne">apply for stage 1</a>
+            </li>
+            <li>
+                <a href="@UrlKeys.ApplyingStageTwo">apply for stage 2</a>
+            </li>
+            <li>
+                <a href="@UrlKeys.ApplyingStageThree">apply for stage 3</a>
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">
+            Check if your biomethane installation is eligible
+        </h2>
+
+        <p>
+            The key criteria include:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                the biomethane installation is in England, Scotland or Wales
+            </li>
+            <li>
+                you inject biomethane produced using anaerobic digestion into the gas grid
+            </li>
+            <li>
+                you produce biomethane using feedstock made from solid biomass, solid waste or liquid waste - you cannot use landfill gas
+            </li>
+            <li>
+                this installation has not been used for a Non-Domestic Renewable Heat Incentive Scheme (NDRHI) scheme registration
+            </li>
+            <li>
+                the installation has not been used to create biogas or biomethane before the launch of the GGSS
+            </li>
+            <li>
+                the equipment used for producing biomethane cannot have been used before for the purposes set out in the regulations
+            </li>
+        </ul>
+
+        <p>
+            You must meet all the eligibility requirements set out in the regulations.
+        </p>
+
+        <p>
+            Read the <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/guidance-resource">guidance (opens in a new tab)</a> carefully before making an application.
+        </p>
+
+        <a href="@UrlKeys.EligibilityGasInjection" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
+            Start now
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+            </svg>
+        </a>
+
+        <h3 class="govuk-heading-s">
+        Already created an account?
+        </h3>
+
+        <p>
+            <a href="/dashboard">Sign in</a>.
+        </p>
+
+        <h2 class="govuk-heading-m">
+            Need help?
+        </h2>
+
+        <p>
+            If you have any questions, visit our <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy" target="_blank">website (opens in a new tab)</a> where you’ll find additional guidance for the scheme.
+        </p>
+
+        <p>
+            You can also <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/green-gas-support-scheme-and-green-gas-levy/green-gas-support-scheme-and-green-gas-levy-contacts" target="_blank">contact us (opens in a new tab)</a>.
+        </p>
+        
+        <p>
+            Phone us on 0300 303 5997 if it's difficult for you to use this portal.
+        </p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @{
+            await Html.RenderPartialAsync("_StepByStepNavHeading");
+            await Html.RenderPartialAsync("_StepByStepNav");
+        }
+    </div>
+</div>

@@ -1,0 +1,21 @@
+﻿@using System.Net
+@model CustomErrorViewModel
+
+@{
+    ViewData["Title"] = "Error";
+    Layout = "Layouts/_SkeletonLayout";
+}
+
+<h3 class="govuk-heading-m">
+    There is a problem
+</h3>
+<p class="govuk-body">
+    @Model.ErrorText
+</p>
+
+@if (Model.StatusCode == HttpStatusCode.Unauthorized)
+{
+    <a class="govuk-link" asp-controller="Account" asp-action="SignIn">
+        Click here to sign in
+    </a>
+}

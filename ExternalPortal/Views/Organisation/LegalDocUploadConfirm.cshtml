@@ -1,0 +1,74 @@
+﻿
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model PortalViewModel<Ofgem.API.GGSS.Domain.Models.OrganisationModel>
+
+@{
+    ViewData["Title"] = "Legal Document - Upload Confirm";
+    var formError = String.IsNullOrEmpty(Model.Model.Value.Error) ? "" : "govuk-form-group--error";
+}
+
+<p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+
+<form action="/organisation/Legal-doc-upload-confirm" method="post">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Check the legal document you provided
+                </h1>
+            </legend>
+
+            @{
+                await Html.RenderPartialAsync("Components/UploadFileDetails",
+                    new ViewDataDictionary(ViewData)
+                    {
+                        { "Id", Model.Model.Value.LegalDocument.FileId },
+                        { "Name", Model.Model.Value.LegalDocument.FileName },
+                        { "Size", Model.Model.Value.LegalDocument.FileSizeAsString },
+        });
+            }
+
+            <div class="govuk-form-group @formError">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Is this file correct?
+                    </legend>
+                    @{
+                        if (!String.IsNullOrEmpty(Model.Model.Value.Error))
+                        {
+                            <span id="transport-upload-error" class="govuk-error-message">
+                                @Model.Model.Value.Error
+                            </span>
+                        }
+                    }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="documentAgree-yes" name="documentAgree" type="radio" value="Yes">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-yes">
+                                Yes, add this file
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="documentAgree-no" name="documentAgree" type="radio" value="No">
+                            <label class="govuk-label govuk-radios__label" for="documentAgree-no">
+                                No, I want to choose a different file
+                            </label>
+                        </div>
+
+                    </div>
+                    @Html.HiddenFor(m => m.ReturnUrl)
+                </fieldset>
+            </div>
+            <p>
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel
+                    {
+                        Text = "Continue",
+                        Type = "submit"
+                    })
+                </div>
+            </p>
+        </div>
+    </div>
+</form>

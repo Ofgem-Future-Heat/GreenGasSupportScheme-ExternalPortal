@@ -1,0 +1,8 @@
+﻿@using GovUkDesignSystem
+@model  ExternalPortal.ViewModels.Shared.Layouts.SimplePageHeaderLayoutViewModel
+@{
+    Layout = "Layouts/_StandardHeadingsLayout";
+}
+
+@await Html.GovUkErrorSummary(ViewData.ModelState)
+@RenderBody()

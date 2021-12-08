@@ -1,0 +1,97 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ApplicationValue
+
+@{
+    ViewData["Title"] = "Check your answers";
+    
+    var applicationId = Context.Request.Query["ApplicationId"];
+
+    var outcomeText = "";
+
+    var IsHavePlanningPermission = Model.StageOne.ProvidePlanningPermission.PlanningPermissionOutcome == "Yes";
+
+    @if (IsHavePlanningPermission)
+    {
+        await Html.RenderPartialAsync("Components/ViewBackLink", UrlKeys.PlanningPermissionUploadConfirmLink);
+        outcomeText = "Yes, we have planning permission";
+    }
+    else
+    {
+        await Html.RenderPartialAsync("Components/ViewBackLink", UrlKeys.PlanningPermissionDoYouHave);
+        outcomeText = "No because planning permission was not needed";
+    }
+}
+
+@using (Html.BeginForm("CheckAnswers", "PlanningPermission", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Check your answers</h1>
+
+            <h2 class="govuk-heading-m">Planning permission</h2>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Planning outcome
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @outcomeText
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.PlanningPermissionDoYouHave">
+                            Change<span class="govuk-visually-hidden"> planning outcome</span>
+                        </a>
+                    </dd>
+                </div>
+
+                @if (IsHavePlanningPermission)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Planning upload
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.StageOne.ProvidePlanningPermission.PlanningPermissionDocument.FileName
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="@UrlKeys.PlanningPermissionUploadLink">
+                                Change<span class="govuk-visually-hidden"> planning upload</span>
+                            </a>
+                        </dd>
+                    </div>
+                }
+                else
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Check your statement as to why planning permission is not required
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.StageOne.ProvidePlanningPermission.PlanningPermissionStatement
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="@UrlKeys.PlanningExemptUploadLink">
+                                Change<span class="govuk-visually-hidden"> planning statement</span>
+                            </a>
+                        </dd>
+                    </div>
+                }
+            </dl>
+
+
+            <div class="govuk-button-group">
+                @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+            </div>
+            
+            @{
+                await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+            }
+            
+        </div>
+    </div>
+}

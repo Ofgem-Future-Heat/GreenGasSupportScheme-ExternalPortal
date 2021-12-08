@@ -1,0 +1,58 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.PlantDetailsModel
+
+@{
+    ViewData["Title"] = "Stage One - Give a description of the equipment used to produce biomethane";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+<form action="@UrlKeys.EquipmentDescriptionLink" method="post">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <label for="EquipmentDescription">
+                            <h1 class="govuk-fieldset__heading">
+                                Give a description of the equipment used to produce biomethane
+                            </h1>
+                        </label>
+                    </legend>
+
+                    <p class="govuk-body">
+                        This description should include details of:
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>equipment required to convert raw biogas into biomethane suitable for injection</li>
+                            <li>equipment to remove CO2 and other elements</li>
+                            <li>pressurisation equipment</li>
+                            <li>propanation equipment</li>
+                            <li>odorant equipment</li>
+                            <li>anaerobic digester(s)</li>
+                            <li>any other equipment which is integral to the production of biomethane for injection</li>
+                        </ul>
+                    </p>
+
+                    <div class="govuk-form-group">
+                        @await Html.GovUkTextAreaFor(m => m.EquipmentDescription)
+                    </div>
+                </fieldset>
+                <p>
+                    <div class="govuk-button-group">
+                        @await Html.GovUkButton(new ButtonViewModel
+                   {
+                       Text = "Save and continue"
+                   })
+                    </div>
+                    @if (Model.BackLink != null)
+                    {
+                        await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.BackLink);
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</form>

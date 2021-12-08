@@ -1,0 +1,145 @@
+@model ExternalPortal.ViewModels.OrganisationDetailsViewModel
+
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/dashboard">Your dashboard</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="#"> @Model.OrganisationName</a>
+                </li>
+            </ol>
+        </div>
+        
+        <br>
+
+        <h1 class="govuk-heading-xl"> @Model.OrganisationName </h1>
+    
+        <nav class="moj-sub-navigation" aria-label="Sub navigation">
+        
+            <ul class="moj-sub-navigation__list">
+                <li class="moj-sub-navigation__item">
+                    <a class="moj-sub-navigation__link" asp-controller="Dashboard" asp-action="YourOrganisations" asp-route-organisationId="@Model.OrganisationId">Installation</a>
+                </li>
+
+                <li class="moj-sub-navigation__item">
+                    <a class="moj-sub-navigation__link" aria-current="page" href="">Organisation details</a>
+                </li>
+
+                @* TODO: Reenable new user functionality *@
+                @* <li class="moj-sub-navigation__item"> *@
+                @*     <a class="moj-sub-navigation__link" asp-controller="Dashboard" asp-action="UsersDetails" asp-route-organisationId="@Model.OrganisationId">Users</a> *@
+                @* </li> *@
+            </ul>
+        
+        </nav>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h2 class="govuk-heading-l">Organisation details</h2>
+                <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Organisation type
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.OrganisationType
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Organisation name
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.OrganisationName
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Organisation address
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Html.Raw(Model.GetFormattedAddress())
+                        </dd>
+                    </div>
+        
+                    <br/>
+                    
+                    <h2 class="govuk-heading-m">Responsible person details</h2>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Responsible person name
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.ResponsiblePersonName
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Responsible person email
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.ResponsiblePersonEmail
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Photographic identification
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @{
+                                await Html.RenderPartialAsync("Components/ReviewFileDetails",
+                                    new ViewDataDictionary(ViewData)
+                                    {
+                                        { "Id", Model.PhotoId?.FileId },
+                                        { "Name", Model.PhotoId?.FileName },
+                                        { "Size", Model.PhotoId?.FileSizeAsString }
+                                    }
+                                );
+                            }
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Bank statement or bill
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @{
+                                await Html.RenderPartialAsync("Components/ReviewFileDetails",
+                                    new ViewDataDictionary(ViewData)
+                                    {
+                                        { "Id", Model.ProofOfAddress?.FileId },
+                                        { "Name", Model.ProofOfAddress?.FileName },
+                                        { "Size", Model.ProofOfAddress?.FileSizeAsString }
+                                    }
+                                );
+                            }
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Letter of authority
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @{
+                                await Html.RenderPartialAsync("Components/ReviewFileDetails",
+                                    new ViewDataDictionary(ViewData)
+                                    {
+                                        { "Id", Model.LetterOfAuthority?.FileId },
+                                        { "Name", Model.LetterOfAuthority?.FileName },
+                                        { "Size", Model.LetterOfAuthority?.FileSizeAsString }
+                                    }
+                                );
+                            }
+                        </dd>
+                    </div>
+        
+                </dl>
+            </div>
+        </div>
+    </div>
+
+</div>

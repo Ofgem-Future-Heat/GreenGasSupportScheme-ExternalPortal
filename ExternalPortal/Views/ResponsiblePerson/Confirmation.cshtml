@@ -1,0 +1,94 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model ExternalPortal.ViewModels.ResponsiblePersonDetailViewModel
+@{
+    ViewData["Title"] = "Responsible Person Details";
+}
+
+@using (Html.BeginForm("Confirmation", "ResponsiblePerson", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-width-container">
+        @if (Model.ResponsiblePersonIsYou)
+        {
+            await Html.RenderPartialAsync("Components/ViewBackLink");
+        }
+        else
+        {
+            await Html.RenderPartialAsync("Components/ViewBackLink");
+        }
+
+        <h1 class="govuk-heading-xl">
+            <span class="govuk-caption-l">Register a new organisation</span>
+            Responsible Person Details
+        </h1>
+
+        <div class="govuk-form-group">
+            <div class="govuk-!-margin-bottom-9 govuk-!-margin-top-4">
+                <h2 class="govuk-heading-l  govuk-!-margin-bottom-2">Responsible Person</h2>
+
+                @if (!string.IsNullOrEmpty(Model.EmailAddress))
+                {
+                    var summaryListViewModel = new SummaryListViewModel
+                    {
+                        Classes = "summaryListViewModel",
+                        Rows = new List<SummaryListRowViewModel>()
+                    };
+
+                    summaryListViewModel.Rows.Add(new SummaryListRowViewModel
+                    {
+                        Key = new SummaryListRowKey { Text = "First Name" },
+                        Value = new SummaryListRowValue { Text = Model.FirstName }
+                    });
+
+                    summaryListViewModel.Rows.Add(new SummaryListRowViewModel
+                    {
+                        Key = new SummaryListRowKey { Text = "Surname" },
+                        Value = new SummaryListRowValue { Text = Model.Surname }
+                    });
+
+                    summaryListViewModel.Rows.Add(new SummaryListRowViewModel
+                    {
+                        Key = new SummaryListRowKey { Text = "Email address" },
+                        Value = new SummaryListRowValue { Text = Model.EmailAddress }
+                    });
+
+                    summaryListViewModel.Rows.Add(new SummaryListRowViewModel
+                    {
+                        Key = new SummaryListRowKey { Text = "Phone Number" },
+                        Value = new SummaryListRowValue { Text = Model.PhoneNumber }
+                    });
+
+                    @(await Html.GovUkSummaryList(summaryListViewModel))
+
+                    @Html.Hidden("EmailAddress")
+
+                    @Html.Hidden("ResponsiblePersonIsYou")
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-button-group">
+        @await Html.GovUkButton(new ButtonViewModel
+        {
+            Text = "Continue"
+        })
+
+        @{
+            if (!Model.ResponsiblePersonIsYou)
+            {
+                @await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Edit Details",
+                    Classes = " govuk-button--secondary govuk-!-margin-right-1",
+                    Value = "EditDetails",
+                    Name = "EditDetails"
+                })
+            }
+        }
+
+        <a href="/ResponsiblePerson/Index/">Cancel</a>
+    </div>
+}

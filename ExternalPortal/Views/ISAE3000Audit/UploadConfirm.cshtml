@@ -1,0 +1,76 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Tasks.Isae3000AuditModel
+@{
+    ViewData["Title"] = "ISAE3000 Audit upload confirm";
+
+    var formError = Model.HasError() ? "govuk-form-group--error" : "";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+@using (Html.BeginForm("UploadConfirm", "Isae3000Audit", new { ApplicationId = applicationId }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Check your ISAE 3000 audit document upload</h1>
+
+            @{
+                await Html.RenderPartialAsync("Components/UploadFileDetails",
+                    new ViewDataDictionary(ViewData)
+                    {
+                        { "Id", Model.DocumentId },
+                        { "Name", Model.Filename },
+                        { "Size", Model.FileSizeAsString },
+                    });
+            }
+
+            <div class="govuk-form-group @formError">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Is this file correct?
+                    </legend>
+
+                    @{
+                        if (Model.HasError())
+                        {
+                            <span id="transport-upload-error" class="govuk-error-message">
+                                @Model.Error
+                            </span>
+                        }
+                    }
+
+                    <div class="govuk-radios">
+                        @{
+                            foreach (var option in Model.Options)
+                            {
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="@option.Id"
+                                           name="option" type="radio" value="@option.Value">
+                                    <label class="govuk-label govuk-radios__label" for="@option.Id">
+                                        @option.Text
+                                    </label>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="govuk-button-group">
+        @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+    </div>
+}
+
+@{
+    await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+}

@@ -1,0 +1,10 @@
+﻿@model ExternalPortal.ViewModels.Shared.Components.BackLinkViewModel
+
+@if (Model.ReferenceParams.Any() && Model.ReferenceParams.ContainsKey(UrlKeys.ReturnToYourApplicationLink))
+{
+    <p>
+        <a href="@Model.ReferenceParams[UrlKeys.ReturnToYourApplicationLink]" class="govuk-link">
+            Return to your application
+        </a>
+    </p>
+}

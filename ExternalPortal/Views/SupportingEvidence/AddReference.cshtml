@@ -1,0 +1,58 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Tasks.AdditionalFinancialEvidenceModel
+@{
+    ViewData["Title"] = "Add reference";
+
+    var formError = Model.HasError() ? "govuk-form-group--error" : "";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var applicationId = Context.Request.Query["ApplicationId"];
+
+    var uploadedDocument = Model.Documents.Last();
+}
+
+@using (Html.BeginForm("AddReference", "SupportingEvidence", new { ApplicationId = @applicationId }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <label class="govuk-label" for="Reference">
+                <h1 class="govuk-fieldset__heading">
+                    Add a reference for this file @uploadedDocument.Filename
+                </h1>
+            </label>
+            <div id="more-detail-hint" class="govuk-hint">
+                This will help us better identify documents if we need any more evidence.
+            </div>
+
+            <div class="govuk-form-group @formError">
+                <fieldset class="govuk-fieldset">
+                    @{
+                        if (Model.HasError())
+                        {
+                            <span id="transport-upload-error" class="govuk-error-message">
+                                @Model.Error
+                            </span>
+                        }
+                    }
+
+                    <input class="govuk-input" id="Reference" name="Reference" type="text" value="@uploadedDocument.Reference">
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-button-group">
+        @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+    </div>
+
+    @Html.Hidden("DocumentId", uploadedDocument.DocumentId, new { @id = "DocumentId" })
+}
+
+@{
+    await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+}
