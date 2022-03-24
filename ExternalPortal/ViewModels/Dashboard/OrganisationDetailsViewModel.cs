@@ -13,11 +13,13 @@ namespace ExternalPortal.ViewModels
         public string OrganisationName { get; set; }
         public AddressModel OrganisationAddress { get; set; }
         public string ResponsiblePersonName { get; set; }
+        public string ResponsiblePersonSurname { get; set; }
         public string ResponsiblePersonEmail { get; set; }
         public DocumentValue PhotoId { get; set; }
         public DocumentValue ProofOfAddress { get; set; }
         public DocumentValue LetterOfAuthority { get; set; }
-        public List<UserModel> OrganisationUsers { get; set; }
+        public List<UserValue> OrganisationUsers { get; set; }
+        public bool IsAuthorisedSignatory { get; set; }
 
         public string GetFormattedAddress()
         {

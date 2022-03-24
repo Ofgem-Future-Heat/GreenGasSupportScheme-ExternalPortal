@@ -11,15 +11,16 @@ using ExternalPortal.Services;
 using ExternalPortal.ViewModels;
 using ExternalPortal.ViewModels.Shared;
 using ExternalPortal.ViewModels.Shared.Components;
+using ExternalPortal.ViewModels.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Ofgem.API.GGSS.Domain.Contracts.Services;
 using Ofgem.API.GGSS.Domain.ModelValues;
 using Ofgem.API.GGSS.DomainModels;
-using Ofgem.Azure.Redis.Data.Contracts;
+using Ofgem.GovUK.Notify.Client;
 using InstallationModel = ExternalPortal.ViewModels.InstallationModel;
 using TaskStatus = ExternalPortal.Enums.TaskStatus;
 
@@ -32,6 +33,7 @@ namespace ExternalPortal.Controllers
         private readonly IGetApplicationService _getApplicationService;
         private readonly IUpdateApplicationService _updateApplicationService;
         private readonly ISendEmailService _sendEmailService;
+        private readonly IOptions<SendEmailConfig> _sendEmailConfig;
 
         public StageOneController(
             IRedisCacheService redisCache,
@@ -39,13 +41,16 @@ namespace ExternalPortal.Controllers
             ISaveDocumentService saveDocumentService,
             IGetApplicationService getApplicationService,
             IUpdateApplicationService updateApplicationService,
-            ISendEmailService sendEmailService) : base(redisCache)
+            ISendEmailService sendEmailService,
+            IOptions<SendEmailConfig> sendEmailConfig
+            ) : base(redisCache)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _saveDocumentService = saveDocumentService;
             _getApplicationService = getApplicationService;
             _updateApplicationService = updateApplicationService;
             _sendEmailService = sendEmailService;
+            _sendEmailConfig = sendEmailConfig;
         }
 
         [HttpGet]
@@ -96,7 +101,127 @@ namespace ExternalPortal.Controllers
                 return RedirectToAction(nameof(CheckAnswers));
             }
             
-            return RedirectToAction(nameof(PlantAddress));
+            return RedirectToAction(nameof(LatLongAnaerobic));
+        }
+        
+        [HttpGet]
+        [Route(UrlKeys.LatLongAnaerobicLink)]
+        public async Task<IActionResult> LatLongAnaerobic()
+        {
+            _logger.LogDebug("LatLongAnaerobic action on StageOneController controller called");
+
+            var persistedApplication = await RetrieveCurrentApplicationFromApi();
+
+            var persistedLatLong = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeAnaerobic;
+
+            var model = new LatitudeLongitudeModel()
+            {
+                LatitudeLongitudeAnaerobic = new LatitudeLongitudeValue()
+                {
+                    Latitude = persistedLatLong.Latitude == 0 ? (double?)null : persistedLatLong.Latitude,
+                    Longitude = persistedLatLong.Longitude == 0 ? (double?)null : persistedLatLong.Longitude
+                },
+                ReturnUrl = HttpContext.Request.Query["returnUrl"]
+            };
+
+            return View(nameof(LatLongAnaerobic), model);
+        }
+        
+        [HttpPost]
+        [Route(UrlKeys.LatLongAnaerobicLink)]
+        public async Task<IActionResult> LatLongAnaerobic([FromForm] LatitudeLongitudeModel viewModel)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(LatLongAnaerobic), viewModel);
+            }
+            
+            var persistedApplication = await RetrieveCurrentApplicationFromApi();
+
+            var currentTask = persistedApplication.StageOne.TellUsAboutYourSite;
+            if (currentTask.Status == TaskStatus.NotStarted.ToString())
+            {
+                currentTask.Status = TaskStatus.InProgress.ToString();
+            }
+
+            if (viewModel.LatitudeLongitudeAnaerobic?.Latitude != null)
+            {
+                currentTask.LatitudeLongitudeAnaerobic.Latitude = viewModel.LatitudeLongitudeAnaerobic.Latitude.Value;
+            }
+
+            if (viewModel.LatitudeLongitudeAnaerobic?.Longitude != null)
+            {
+                currentTask.LatitudeLongitudeAnaerobic.Longitude = viewModel.LatitudeLongitudeAnaerobic.Longitude.Value;
+            }
+
+            await PersistApplicationToApi(persistedApplication);
+            
+            if (!string.IsNullOrEmpty(viewModel.ReturnUrl))
+            {
+                return RedirectToAction(nameof(CheckAnswers));
+            }
+
+            return RedirectToAction(nameof(LatLongInjection));
+        }
+        
+        [HttpGet]
+        [Route(UrlKeys.LatLongInjectionLink)]
+        public async Task<IActionResult> LatLongInjection()
+        {
+            _logger.LogDebug("LatLongInjection action on StageOneController controller called");
+        
+            var persistedApplication = await RetrieveCurrentApplicationFromApi();
+            
+            var persistedLatLong = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeInjection;
+
+            var model = new LatitudeLongitudeModel()
+            {
+                LatitudeLongitudeInjection = new LatitudeLongitudeValue()
+                {
+                    Latitude = persistedLatLong.Latitude == 0 ? (double?)null : persistedLatLong.Latitude,
+                    Longitude = persistedLatLong.Longitude == 0 ? (double?)null : persistedLatLong.Longitude
+                },
+                ReturnUrl = HttpContext.Request.Query["returnUrl"]
+            };
+
+            return View(nameof(LatLongInjection), model);
+        }
+        
+        [HttpPost]
+        [Route(UrlKeys.LatLongInjectionLink)]
+        public async Task<IActionResult> LatLongInjection([FromForm] LatitudeLongitudeModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(LatLongInjection), viewModel);
+            }
+            
+            var persistedApplication = await RetrieveCurrentApplicationFromApi();
+        
+            var currentTask = persistedApplication.StageOne.TellUsAboutYourSite;
+            if (currentTask.Status == TaskStatus.NotStarted.ToString())
+            {
+                currentTask.Status = TaskStatus.InProgress.ToString();
+            }
+        
+            if (viewModel.LatitudeLongitudeInjection.Latitude != null)
+            {
+                currentTask.LatitudeLongitudeInjection.Latitude = viewModel.LatitudeLongitudeInjection.Latitude.Value;
+            }
+            
+            if (viewModel.LatitudeLongitudeInjection.Longitude != null)
+            {
+                currentTask.LatitudeLongitudeInjection.Longitude = viewModel.LatitudeLongitudeInjection.Longitude.Value;
+            }
+            await PersistApplicationToApi(persistedApplication);
+            
+            if (!string.IsNullOrEmpty(viewModel.ReturnUrl))
+            {
+                return RedirectToAction(nameof(CheckAnswers));
+            }
+        
+            return RedirectToAction(nameof(HasPostcode));
         }
 
         [HttpGet]
@@ -216,10 +341,72 @@ namespace ExternalPortal.Controllers
         }
 
         [HttpGet]
+        [Route(UrlKeys.HasPostcodeLink)]
+        public IActionResult HasPostcode()
+        {
+            var model = new PlantDetailsModel
+            {
+                ReturnUrl = HttpContext.Request.Query["change"]
+            };
+            
+            return View(nameof(HasPostcode), model);
+        }
+
+        [HttpPost]
+        [Route(UrlKeys.HasPostcodeLink)]
+        public async Task<IActionResult> HasPostcode(string hasPostcode, [FromForm] PlantDetailsModel viewModel)
+        {
+            if (string.IsNullOrWhiteSpace(hasPostcode))
+            {
+                var model = new PlantDetailsModel();
+                
+                model.Error = "Select an option";
+
+                return View(nameof(HasPostcode), model);
+            }
+            
+            var application = await RetrieveCurrentApplicationFromApi();
+
+            application.StageOne.TellUsAboutYourSite.HasPostcode = hasPostcode;
+            
+            await PersistApplicationToApi(application);
+
+            switch (hasPostcode)
+            {
+                case "Yes":
+                    if (viewModel.ReturnUrl == "type")
+                    {
+                        var model = new QueryStringModel()
+                        {
+                            ReturnUrl = viewModel.ReturnUrl
+                        };
+                        return RedirectToAction(nameof(PlantAddress), model);
+                    }
+                    return RedirectToAction(nameof(PlantAddress));
+                
+                case "No":
+                    if (!string.IsNullOrEmpty(viewModel.ReturnUrl))
+                    {
+                        return RedirectToAction(nameof(CheckAnswers));
+                    }
+                    return RedirectToAction(nameof(CapacityUpload));
+            }
+            
+            if (!string.IsNullOrEmpty(viewModel.ReturnUrl) && hasPostcode == "No")
+            {
+                return RedirectToAction(nameof(CheckAnswers));
+            }
+
+            return View(nameof(HasPostcode), viewModel);
+        }
+
+        [HttpGet]
         [Route(UrlKeys.PlantAddressLink)]
-        public async Task<IActionResult> PlantAddress()
+        public async Task<IActionResult> PlantAddress(QueryStringModel viewModel = null)
         {
             var persistedApplication = await RetrieveCurrentApplicationFromApi();
+            
+            string queryString = string.IsNullOrEmpty(viewModel?.ReturnUrl) ? HttpContext.Request.Query["returnUrl"].ToString() : viewModel.ReturnUrl;
 
             var model = new AddressViewModel()
             {
@@ -228,7 +415,7 @@ namespace ExternalPortal.Controllers
                 Town = persistedApplication.StageOne.TellUsAboutYourSite.PlantAddress.Town, 
                 County = persistedApplication.StageOne.TellUsAboutYourSite.PlantAddress.County, 
                 Postcode = persistedApplication.StageOne.TellUsAboutYourSite.PlantAddress.Postcode,
-                ReturnUrl = HttpContext.Request.Query["returnUrl"]
+                ReturnUrl = queryString
             };
             
             return View(nameof(PlantAddress), model);
@@ -260,6 +447,14 @@ namespace ExternalPortal.Controllers
             
             if (!string.IsNullOrEmpty(model.ReturnUrl))
             {
+                if (model.ReturnUrl == "type")
+                {
+                    var queryModel = new QueryStringModel()
+                    {
+                        ReturnUrl = model.ReturnUrl
+                    };
+                    return RedirectToAction(nameof(InjectionPointAddress), queryModel);
+                }
                 return RedirectToAction(nameof(CheckAnswers));
             }
             
@@ -268,9 +463,11 @@ namespace ExternalPortal.Controllers
         
         [HttpGet]
         [Route(UrlKeys.InjectionPointAddressLink)]
-        public async Task<IActionResult> InjectionPointAddress()
+        public async Task<IActionResult> InjectionPointAddress(QueryStringModel queryModel = null)
         {
             var persistedApplication = await RetrieveCurrentApplicationFromApi();
+            
+            string queryString = string.IsNullOrEmpty(queryModel?.ReturnUrl) ? HttpContext.Request.Query["returnUrl"].ToString() : queryModel.ReturnUrl;
 
             var model = new AddressViewModel()
             {
@@ -279,7 +476,7 @@ namespace ExternalPortal.Controllers
                 County = persistedApplication.StageOne.TellUsAboutYourSite.InjectionPointAddress.County,
                 Town = persistedApplication.StageOne.TellUsAboutYourSite.InjectionPointAddress.Town,
                 Postcode = persistedApplication.StageOne.TellUsAboutYourSite.InjectionPointAddress.Postcode,
-                ReturnUrl = HttpContext.Request.Query["returnUrl"]
+                ReturnUrl = queryString
             };
 
             return View(nameof(InjectionPointAddress), model);
@@ -415,6 +612,27 @@ namespace ExternalPortal.Controllers
                 
             application.StageOne.PlantDetails.InstallationName = 
                 persistedApplication.StageOne.TellUsAboutYourSite.PlantName;
+            
+            application.StageOne.PlantDetails.LatitudeLongitudeAnaerobic = new LatitudeLongitudeValue()
+            {
+                Latitude = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeAnaerobic.Latitude,
+                Longitude = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeAnaerobic.Longitude
+            };
+            
+            application.StageOne.PlantDetails.LatitudeLongitudeInjection = new LatitudeLongitudeValue()
+            {
+                Latitude = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeInjection.Latitude,
+                Longitude = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeInjection.Longitude
+            };
+            
+            application.StageOne.PlantDetails.LatitudeLongitudeAnaerobic = new LatitudeLongitudeValue()
+            {
+                Latitude = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeAnaerobic.Latitude,
+                Longitude = persistedApplication.StageOne.TellUsAboutYourSite.LatitudeLongitudeAnaerobic.Longitude
+            };
+
+            application.StageOne.PlantDetails.HasPostcode =
+                persistedApplication.StageOne.TellUsAboutYourSite.HasPostcode;
                 
             application.StageOne.PlantDetails.InstallationAddress = new AddressViewModel()
                 {
@@ -549,20 +767,20 @@ namespace ExternalPortal.Controllers
                 BackAction = "/task-list"
             };
 
-            var emailParameter = new EmailParameterBuilder(EmailTemplateIds.StageOneSubmitted, User.GetEmailAddress())
-                .AddFullName(User.GetDisplayName())
-                .AddApplicationId(CurrentPersistedApplicationId)
-                .AddDashboardLink(Request.Scheme, Request.Host, CurrentPersistedApplicationId)
-                .Build();
+            var externalEmailParameter = GetEmailParameterBuilder(User.GetEmailAddress()).Build();
 
-            _sendEmailService.Send(emailParameter, CancellationToken.None);
+            var internalEmailParameter = GetEmailParameterBuilder(_sendEmailConfig.Value.InternalEmail).Build();
+
+            _sendEmailService.Send(externalEmailParameter, CancellationToken.None);
+
+            _sendEmailService.Send(internalEmailParameter, CancellationToken.None);
 
             return View("~/Views/Shared/Confirmation.cshtml", confirmationViewModel);
         }
 
         private async Task<ApplicationValue> RetrieveCurrentApplicationFromApi()
         {
-            var response = await _getApplicationService.Get(new GetApplicationRequest()
+            var response = await _getApplicationService.RetrieveApplication(new GetApplicationRequest()
             {
                 ApplicationId = CurrentPersistedApplicationId.ToString(),
             }, CancellationToken.None);
@@ -579,6 +797,14 @@ namespace ExternalPortal.Controllers
 
                 UserId = UserId.ToString()
             }, CancellationToken.None);
+        }
+
+        private EmailParameterBuilder GetEmailParameterBuilder(string toEmailAddress)
+        {
+            return new EmailParameterBuilder(EmailTemplateIds.StageOneSubmitted, toEmailAddress, _sendEmailConfig.Value.ReplyToId)
+                .AddFullName(User.GetDisplayName())
+                .AddApplicationId(CurrentPersistedApplicationId.ToString())
+                .AddDashboardLink(Request.Scheme, Request.Host, CurrentPersistedApplicationId.ToString());
         }
     }
 }

@@ -78,9 +78,15 @@ namespace ExternalPortal.Extensions
             return applicationStatus switch
             {
                 "Stage One Submitted" => "govuk-tag--blue",
+                "Stage One With Applicant" => "govuk-tag--yellow",
+                "Stage One Rejected" => "govuk-tag--red",
+                "Stage One Approved" => "govuk-tag--green",
+                "Stage Two Submitted" => "govuk-tag--blue",
+                "Stage Two With Applicant" => "govuk-tag--yellow",
+                "Stage Two Rejected" => "govuk-tag--red",
+                "Stage Two Approved" => "govuk-tag--green",
                 "Draft" => "govuk-tag--yellow",
                 "Rejected" => "govuk-tag--red",
-                "Stage One Approved" => "govuk-tag--green",
                 _ => "govuk-tag--blue",
             };
         }
@@ -99,20 +105,6 @@ namespace ExternalPortal.Extensions
 
             var displayName = displayAttribute?.Text;
             return displayName ?? enumValue.ToString();
-        }
-
-        public static int GetStatusInt(this Enum applicationStatus)
-        {
-            return applicationStatus switch
-            {
-                ApplicationStatus.StageOneSubmitted => 1,
-                ApplicationStatus.StageOneApproved => 2,
-                ApplicationStatus.StageTwoSubmitted => 3,
-                ApplicationStatus.StageTwoApproved => 4,
-                ApplicationStatus.StageThreeSubmitted => 5,
-                ApplicationStatus.StageThreeApproved => 6,
-                _ => 0
-            };
         }
     }
 }

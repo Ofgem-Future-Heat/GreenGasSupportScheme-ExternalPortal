@@ -16,6 +16,8 @@ namespace ExternalPortal.ViewModels
         {
             InstallationAddress = new AddressViewModel();
             CapacityCheckDocument = new DocumentValue();
+            LatitudeLongitudeAnaerobic = new LatitudeLongitudeValue();
+            LatitudeLongitudeInjection = new LatitudeLongitudeValue();
             State = TaskStatus.NotStarted;
         }
 
@@ -39,6 +41,12 @@ namespace ExternalPortal.ViewModels
         public AddressViewModel InstallationAddress { get; set; }
 
         public AddressViewModel InjectionPointAddress { get; set; }
+        
+        public LatitudeLongitudeValue LatitudeLongitudeAnaerobic { get; set; }
+        
+        public LatitudeLongitudeValue LatitudeLongitudeInjection { get; set; }
+        
+        public string HasPostcode { get; set; }
 
         public string Error { get; set; }
 

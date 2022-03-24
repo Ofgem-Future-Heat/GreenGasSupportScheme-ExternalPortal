@@ -12,10 +12,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Ofgem.API.GGSS.Domain.Commands.Organisations;
 using Ofgem.API.GGSS.Domain.Enums;
 using Ofgem.API.GGSS.Domain.Models;
 using Ofgem.API.GGSS.Domain.ModelValues;
+using Ofgem.GovUK.Notify.Client;
 
 namespace ExternalPortal.Controllers
 {
@@ -28,6 +30,7 @@ namespace ExternalPortal.Controllers
         private readonly IOrganisationService _organisationService;
         private readonly ISendEmailService _sendEmailService;
         private readonly IGetUserByProviderIdService _getUserByProviderIdService;
+        private readonly IOptions<SendEmailConfig> _sendEmailConfig;
 
         public OrganisationController(ILogger<OrganisationController> logger,
             IGetCompaniesHouseService getCompaniesHouseService,
@@ -36,7 +39,8 @@ namespace ExternalPortal.Controllers
             ISaveDocumentService saveDocumentService,
             IOrganisationService organisationService,
             ISendEmailService sendEmailService,
-            IGetUserByProviderIdService getUserByProviderIdService) : base(redisCache)
+            IGetUserByProviderIdService getUserByProviderIdService,
+            IOptions<SendEmailConfig> sendEmailConfig) : base(redisCache)
         {
             _logger = logger;
             _getCompaniesHouseService = getCompaniesHouseService;
@@ -45,6 +49,7 @@ namespace ExternalPortal.Controllers
             _organisationService = organisationService;
             _sendEmailService = sendEmailService;
             _getUserByProviderIdService = getUserByProviderIdService;
+            _sendEmailConfig = sendEmailConfig;
         }
 
         [Route(UrlKeys.RegisterAnOrganisation)]
@@ -85,8 +90,8 @@ namespace ExternalPortal.Controllers
             _ = await RedisCache.SaveOrgRegistrationAsync(UserId, "Model.Value.Type", (OrganisationType)viewModel.Model.Value.Type, token);
 
             return viewModel.Model.Value.Type == OrganisationType.Private ?
-                 RedirectToAction(nameof(Start), viewModel) :
-                 RedirectToAction("EnterOrgDetails", viewModel);
+                 RedirectToAction(nameof(Start), new PortalViewModel<OrganisationModel>{ReturnUrl = viewModel.ReturnUrl}) :
+                 RedirectToAction("EnterOrgDetails", new PortalViewModel<OrganisationModel>{ReturnUrl = viewModel.ReturnUrl});
         }
 
         #endregion Organisation Type
@@ -142,7 +147,7 @@ namespace ExternalPortal.Controllers
 
             _ = await RedisCache.SaveOrgRegistrationAsync(UserId, "Model", organisationModel.Model, token);
 
-            return RedirectToAction(nameof(Confirm), viewModel);
+            return RedirectToAction(nameof(Confirm), new PortalViewModel<OrganisationModel>{ReturnUrl = viewModel.ReturnUrl});
         }
         
         [HttpGet]
@@ -192,7 +197,7 @@ namespace ExternalPortal.Controllers
             var vm = await RedisCache.GetOrgRegistrationAsync(UserId, token);
             string queryString = string.IsNullOrEmpty(viewModel.ReturnUrl) ? HttpContext.Request.Query["returnUrl"].ToString() : viewModel.ReturnUrl;
 
-            var model = new EnterOrgDetailsViewModel()
+            return View(nameof(EnterOrgDetails), new EnterOrgDetailsViewModel
             {
                 Name = vm.Model.Value.Name,
                 LineOne = vm.Model.Value.RegisteredOfficeAddress.LineOne,
@@ -202,8 +207,7 @@ namespace ExternalPortal.Controllers
                 Postcode = vm.Model.Value.RegisteredOfficeAddress.Postcode,
                 Type = vm.Model.Value.Type,
                 ReturnUrl = queryString
-            };
-            return View(nameof(EnterOrgDetails), model);
+            });
         }
 
         [HttpPost]
@@ -248,7 +252,7 @@ namespace ExternalPortal.Controllers
             if (response.HasErrors)
             {
                 model.Model.Value.Error = response.Errors.Select(e => e.Message).First();
-
+                model.AddError(model.Model.Value.Error);
                 return View(nameof(LetterOfAuthorityUpload), model);
             }
 
@@ -327,7 +331,7 @@ namespace ExternalPortal.Controllers
             if (response.HasErrors)
             {
                 model.Model.Value.Error = response.Errors.Select(e => e.Message).First();
-
+                model.AddError(model.Model.Value.Error);
                 return View(nameof(LegalDocUpload), model);
             }
 
@@ -402,8 +406,8 @@ namespace ExternalPortal.Controllers
             if (response.HasErrors)
             {
                 model.Model.Value.Error = response.Errors.Select(e => e.Message).First();
-
-                return View(nameof(PhotoIdUpload));
+                model.AddError(model.Model.Value.Error);
+                return View(nameof(PhotoIdUpload), model);
             }
 
             model.Model.Value.PhotoId = new DocumentValue
@@ -477,7 +481,7 @@ namespace ExternalPortal.Controllers
             if (response.HasErrors)
             {
                 model.Model.Value.Error = response.Errors.Select(e => e.Message).First();
-
+                model.AddError(model.Model.Value.Error);
                 return View(nameof(ProofOfAddressUpload), model);
             }
 
@@ -545,7 +549,7 @@ namespace ExternalPortal.Controllers
             });
 
             viewModel.Model.ResponsiblePeople.First().User.Id = findUserResult.UserId;
-            
+
             var command = new OrganisationSave()
             {
                 UserId = findUserResult.UserId,
@@ -554,13 +558,13 @@ namespace ExternalPortal.Controllers
 
             viewModel.Model.Id = await _organisationService.AddOrganisationWithResponsiblePersonAsync(command, token);
 
-            var emailParameter = new EmailParameterBuilder(EmailTemplateIds.OrganisationSubmitted, User.GetEmailAddress())
-                .AddFullName(User.GetDisplayName())
-                .AddDashboardLink(Request.Scheme, Request.Host, CurrentPersistedApplicationId)
-                .AddCustom("ReferenceNumber", viewModel.Model.Value.ReferenceNumber)
-                .Build();
+            var externalEmailParameter = GetEmailParameter(User.GetEmailAddress(), viewModel.Model.Value.ReferenceNumber).Build();
 
-            await _sendEmailService.Send(emailParameter, token);
+            var internalEmailParameter = GetEmailParameter(_sendEmailConfig.Value.InternalEmail, viewModel.Model.Value.ReferenceNumber).Build();
+
+            await _sendEmailService.Send(externalEmailParameter, token);
+
+            await _sendEmailService.Send(internalEmailParameter, token);
 
             return View("Submitted", viewModel);
         }
@@ -586,6 +590,14 @@ namespace ExternalPortal.Controllers
                 return RedirectToAction("LegalDocUpload", organisation);
             }
             return RedirectToAction(nameof(EnterOrgDetails));
+        }
+
+        private EmailParameterBuilder GetEmailParameter(string toEmailAddress, string referenceNumber)
+        {
+            return new EmailParameterBuilder(EmailTemplateIds.OrganisationSubmitted, toEmailAddress, _sendEmailConfig.Value.ReplyToId)
+                .AddFullName(User.GetDisplayName())
+                .AddDashboardLink(Request.Scheme, Request.Host, CurrentPersistedApplicationId.ToString())
+                .AddCustom("ReferenceNumber", referenceNumber);
         }
     }
 }

@@ -1,0 +1,71 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.LatitudeLongitudeModel
+
+@{
+    ViewData["Title"] = "Stage One - Latitude longitude injection point";
+}
+
+<p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
+
+@await Html.GovUkErrorSummary(ViewData.ModelState)
+
+<form action= "@UrlKeys.LatLongInjectionLink" method="post">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            What is the latitude and longitude of the injection point?
+                        </h1>
+                    </legend>
+                    
+                    <div class="govuk-form-group" id="LatitudeLongitudeInjection.Latitude-error">
+                        @await Html.GovUkTextInputFor(m => m.LatitudeLongitudeInjection.Latitude,
+                            classes: "govuk-input govuk-input--width-10",
+                            labelOptions: new LabelViewModel { Text = "Latitude" },
+                            hintOptions: new HintViewModel { Text = "For example, 41.40338" })
+                    </div>
+                    <div class="govuk-form-group" id="LatitudeLongitudeInjection.Longitude-error">
+                        @await Html.GovUkTextInputFor(m => m.LatitudeLongitudeInjection.Longitude,
+                            classes: "govuk-input govuk-input--width-10",
+                            labelOptions: new LabelViewModel { Text = "Longitude" },
+                            hintOptions: new HintViewModel { Text = "For example, 2.17403" })
+                    </div>
+                    @Html.HiddenFor(m => m.ReturnUrl)
+                </fieldset>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Help with latitude and longitude
+                        </span>
+                    </summary>
+                <div class="govuk-details__text">
+                    <p>To find the latitude and longitude:</p>
+                    <ol class="govuk-list govuk-list--number">
+                        <li>Open <a href="https://www.google.com/maps">Google Maps</a>.</li>
+                        <li> Find the correct place on the map. </li>
+                        <li>Right-click.</li>
+                        <li>Click on the latitude and longitude coordinates to copy them automatically.</li>
+                        <li>Right-click to paste them into the boxes here – you’ll have to make sure you enter only the latitude in the latitude box, and only the longitude in the longitude box.</li>
+                    </ol>
+                </div>
+                </details>
+                
+                <div class="govuk-button-group">
+                    @await Html.GovUkButton(new ButtonViewModel
+                       {
+                           Text = "Save and continue"
+                       })
+                </div>
+                @if (Model.BackLink != null)
+                {
+                    await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.BackLink);
+                }
+            </div>
+        </div>
+    </div>
+</form>

@@ -4865,7 +4865,9 @@ p + .govuk-heading-s,
   border-bottom: 10px solid #1d70b8; }
 
 .govuk-header {
-  height: 94px;
+  display: block;
+  height: auto;
+  padding-bottom: 10px;
   background: #fff;
   border-bottom: 5px solid #008554; }
   .govuk-header__container {
@@ -4902,7 +4904,6 @@ p + .govuk-heading-s,
   .govuk-footer__link:link, .govuk-footer__link:visited {
     color: #454a4c; }
   .govuk-footer__link:focus {
-    background-color: #f3f2f1;
     border-bottom-color: #f3f2f1;
     box-shadow: 0 -2px #f3f2f1, 0 4px #f3f2f1; }
 

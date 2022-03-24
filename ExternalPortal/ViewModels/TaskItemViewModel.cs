@@ -17,5 +17,15 @@ namespace ExternalPortal.ViewModels
             this.TaskType = taskType;
             this.ControllerName = taskType.ToString();
         }
+
+        public bool IsEditable(bool previousStageIsApproved)
+        {
+            return previousStageIsApproved && Status != TaskStatus.Submitted;
+        }
+
+        public bool IsCompleted()
+        {
+            return Status == TaskStatus.Completed;
+        }
     }
 }

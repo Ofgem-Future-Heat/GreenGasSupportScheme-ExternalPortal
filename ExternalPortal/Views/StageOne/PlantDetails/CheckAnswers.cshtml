@@ -61,42 +61,86 @@
                         </a>
                     </dd>
                 </div>
-
+                
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Anaerobic address
+                        Anaerobic digestion latitude and longitude
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.LineOne</p>              
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.LineTwo</p>
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.Town</p>
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.County</p>
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.Postcode</p>
+                        @Model.StageOne.PlantDetails.LatitudeLongitudeAnaerobic.Latitude, @Model.StageOne.PlantDetails.LatitudeLongitudeAnaerobic.Longitude
                     </dd>
                     <dd class="govuk-summary-list__actions">
-                        <a class="govuk-link" href="@UrlKeys.PlantAddressLink?returnUrl=check-answers">
-                            Change<span class="govuk-visually-hidden"> anaerobic site address</span>
+                        <a class="govuk-link" href="@UrlKeys.LatLongAnaerobicLink?returnUrl=check-answers">
+                            Change<span class="govuk-visually-hidden"> anaerobic digestion latitude and longitude</span>
                         </a>
                     </dd>
                 </div>
                 
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Injection point address
+                        Injection point latitude and longitude
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.LineOne</p>
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.LineTwo</p>
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.Town</p>
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.County</p>
-                        <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.Postcode</p>
+                        @Model.StageOne.PlantDetails.LatitudeLongitudeInjection.Latitude, @Model.StageOne.PlantDetails.LatitudeLongitudeInjection.Longitude
                     </dd>
                     <dd class="govuk-summary-list__actions">
-                        <a class="govuk-link" href="@UrlKeys.InjectionPointAddressLink?returnUrl=check-answers">
-                            Change<span class="govuk-visually-hidden"> injection point address </span>
+                        <a class="govuk-link" href="@UrlKeys.LatLongInjectionLink?returnUrl=check-answers">
+                            Change<span class="govuk-visually-hidden"> injection point latitude and longitude</span>
                         </a>
                     </dd>
                 </div>
+                
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Postcodes for anaerobic digester and injection point
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.StageOne.PlantDetails.HasPostcode
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@UrlKeys.HasPostcodeLink?returnUrl=check-answers&change=type">
+                            Change<span class="govuk-visually-hidden"> postcodes for anaerobic digester and injection point</span>
+                        </a>
+                    </dd>
+                </div>
+                @if (Model.StageOne.PlantDetails.HasPostcode == "Yes")
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Anaerobic address
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.LineOne</p>              
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.LineTwo</p>
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.Town</p>
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.County</p>
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InstallationAddress.Postcode</p>
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="@UrlKeys.PlantAddressLink?returnUrl=check-answers">
+                                Change<span class="govuk-visually-hidden"> anaerobic site address</span>
+                            </a>
+                        </dd>
+                    </div>
+                    
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Injection point address
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.LineOne</p>
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.LineTwo</p>
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.Town</p>
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.County</p>
+                            <p class="govuk-body">@Model.StageOne.PlantDetails.InjectionPointAddress.Postcode</p>
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="@UrlKeys.InjectionPointAddressLink?returnUrl=check-answers">
+                                Change<span class="govuk-visually-hidden"> injection point address </span>
+                            </a>
+                        </dd>
+                    </div>
+                }
                 
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">

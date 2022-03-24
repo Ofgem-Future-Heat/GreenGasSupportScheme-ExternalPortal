@@ -21,6 +21,7 @@ namespace ExternalPortal.ViewModels
         public bool HasErrors => this.Errors.Any();
         public Dictionary<Type,Guid> RedisKeys { get; set; }
         public List<TempFileUpload> Uploads { get; set; }
+        public String InPageLink { get; set; }
 
         public PortalViewModel()
         {

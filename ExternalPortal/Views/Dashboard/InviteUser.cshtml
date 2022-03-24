@@ -6,6 +6,19 @@
 @{
     ViewData["Title"] = "Invite a user to this organisation";
 
+    if (ViewData.ModelState.ErrorCount > 0) 
+    {
+        var model = new PortalViewModel<ExternalPortal.ViewModels.InvitationsViewModel>(Model);
+        model.InPageLink = "#UserEmail";
+        var query = from state in ViewData.ModelState.Values  
+                    from error in state.Errors  
+                    select error.ErrorMessage;
+        
+        query.ToList().ForEach(e => model.AddError(e));  
+
+        await Html.RenderPartialAsync("_ErrorPartial", model);
+    } 
+
     @if (Model.BackLink != null)
     {
         <p><a href="javascript:history.go(-1)" class="govuk-back-link">Back</a></p>
@@ -30,7 +43,12 @@
                         labelOptions: new LabelViewModel { Text = "Email address" }) 
                     </div>
                 </fieldset>
-
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.OrganisationName)
+                @for (int i = 0; i < Model.OrganisationUsers.Count; i++)
+                {
+                    @Html.HiddenFor(m => m.OrganisationUsers[i].EmailAddress)
+                }
                 <p>
                     <div class="govuk-button-group">
                         @await Html.GovUkButton(new ButtonViewModel

@@ -1,4 +1,7 @@
 @model ExternalPortal.ViewModels.OrganisationDetailsViewModel
+@{
+    ViewData["Title"] = "Users";
+}
 
 <div class="govuk-grid-row">
 
@@ -13,55 +16,68 @@
                 </li>
             </ol>
         </div>
-        
+
         <br>
 
         <h1 class="govuk-heading-xl"> @Model.OrganisationName </h1>
-    
+
         <nav class="moj-sub-navigation" aria-label="Sub navigation">
-        
+
             <ul class="moj-sub-navigation__list">
                 <li class="moj-sub-navigation__item">
                     <a class="moj-sub-navigation__link" asp-controller="Dashboard" asp-action="YourOrganisations" asp-route-organisationId="@Model.OrganisationId">Installation</a>
                 </li>
-            
-                @* TODO: Reenable new user functionality *@
-                @* <li class="moj-sub-navigation__item"> *@
-                @*     <a class="moj-sub-navigation__link" asp-controller="Dashboard" asp-action="OrganisationDetails" asp-route-organisationId="@Model.OrganisationId">Organisation details</a> *@
-                @* </li> *@
-                
+
+                <li class="moj-sub-navigation__item">
+                    <a class="moj-sub-navigation__link" asp-controller="Dashboard" asp-action="OrganisationDetails" asp-route-organisationId="@Model.OrganisationId">Organisation details</a>
+                </li>
+
                 <li class="moj-sub-navigation__item">
                     <a class="moj-sub-navigation__link" aria-current="page" href="">Users</a>
                 </li>
             </ul>
-        
+
         </nav>
-        
+
         <h2 class="govuk-heading-l">Users</h2>
-        
-        <p>
-            <a class="govuk-link" asp-controller="Dashboard" asp-action="InviteUser" asp-route-organisationId="@Model.OrganisationId">Invite a user to this organisation </a>
-        </p>
-        
+
+
+        @if (Model.IsAuthorisedSignatory)
+        {
+            <p>
+                <a class="govuk-link" asp-controller="Dashboard" asp-action="InviteUser" asp-route-organisationId="@Model.OrganisationId">Invite a user to this organisation </a>
+            </p>
+        }
+
+
         <br>
 
         <table class="govuk-table">
-        
-          <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header">Users</th>
-              <th scope="col" class="govuk-table__header">Role</th>
-              <th scope="col" class="govuk-table__header"></th>
-            </tr>
-          </thead>
-          <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__header">@Model.ResponsiblePersonName</th>
-              <td class="govuk-table__cell">Responsible person</td>
-              <td class="govuk-table__cell"></td>
-            </tr>
 
-          </tbody>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Users</th>
+                    <th scope="col" class="govuk-table__header">Role</th>
+                    <th scope="col" class="govuk-table__header"></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">@Model.ResponsiblePersonName @Model.ResponsiblePersonSurname</th>
+                    <td class="govuk-table__cell">Authorised Signatory</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                @{
+                    @foreach (var user in Model.OrganisationUsers)
+                    {
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">@user.Name @user.Surname</th>
+                            <td class="govuk-table__cell">Admin</td>
+                            <td class="govuk-table__cell"></td>
+                        </tr>
+                    }
+                }
+            </tbody>
         </table>
     </div>
 

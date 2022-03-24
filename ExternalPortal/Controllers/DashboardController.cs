@@ -14,12 +14,16 @@ using Ofgem.API.GGSS.Domain.Models;
 using ExternalPortal.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
+using Microsoft.Extensions.Configuration;
 using Ofgem.API.GGSS.Domain.Enums;
+using Ofgem.GovUK.Notify.Client;
+using Microsoft.Extensions.Options;
 
 namespace ExternalPortal.Controllers
 {
     public class DashboardController : BaseController
     {
+        private readonly IConfiguration _configuration;
         private readonly ILogger<DashboardController> _logger;
         private readonly IGetOrganisationService _getOrganisationService;
         private readonly ICreateApplicationService _createApplicationService;
@@ -27,8 +31,12 @@ namespace ExternalPortal.Controllers
         private readonly IGetUserByProviderIdService _getUserByProviderIdService;
         private readonly IAddUserService _addUserService;
         private readonly IGetOrganisationDetailsService _getOrganisationDetailsService;
+        private readonly IInviteUserToOrganisationService _inviteUserToOrganisationService;
+        private readonly ISendEmailService _sendEmailService;
+        private readonly IOptions<SendEmailConfig> _sendEmailConfig;
 
         public DashboardController(
+            IConfiguration configuration,
             ILogger<DashboardController> logger,
             ICreateApplicationService createApplicationService,
             IRedisCacheService redisCache,
@@ -36,8 +44,12 @@ namespace ExternalPortal.Controllers
             IGetOrganisationDetailsService getOrganisationDetailsService,
             IGetOrganisationsForUserService getOrganisationsForUserService,
             IGetUserByProviderIdService getUserByProviderIdService,
-            IAddUserService addUserService) : base(redisCache)
+            IAddUserService addUserService,
+            IInviteUserToOrganisationService inviteUserToOrganisationService,
+            ISendEmailService sendEmailService,
+            IOptions<SendEmailConfig> sendEmailConfig) : base(redisCache)
         {
+            _configuration = configuration;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _getOrganisationService = getOrganisationService;
             _getOrganisationDetailsService = getOrganisationDetailsService;
@@ -45,13 +57,15 @@ namespace ExternalPortal.Controllers
             _getUserByProviderIdService = getUserByProviderIdService;
             _addUserService = addUserService;
             _createApplicationService = createApplicationService;
+            _inviteUserToOrganisationService = inviteUserToOrganisationService;
+            _sendEmailService = sendEmailService;
+            _sendEmailConfig = sendEmailConfig;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(CancellationToken token)
-
         {
-            _logger.LogDebug("Index action on Dashboard controller called");
+            _logger.LogInformation("Index action on Dashboard controller called");
 
             var user = await _getUserByProviderIdService.Get(new GetUserRequest()
             {
@@ -117,85 +131,117 @@ namespace ExternalPortal.Controllers
 
             return Redirect("/task-list");
         }
-
-        // TODO: Reenable new user functionality
-        // [HttpGet]
-        // public async Task<IActionResult> OrganisationDetails()
-        // {
-        //     var organisationId = HttpContext.Request.Query["organisationId"];
-        //     
-        //     var organisationDetails = await _getOrganisationDetailsService.Get(new GetOrganisationDetailsRequest()
-        //     {
-        //         OrganisationId = organisationId
-        //     }, CancellationToken.None);
-        //
-        //     var model = new OrganisationDetailsViewModel()
-        //     {
-        //         OrganisationId = organisationId,
-        //         OrganisationType = organisationDetails.OrganisationType,
-        //         OrganisationName = organisationDetails.OrganisationName,
-        //         OrganisationAddress = organisationDetails.OrganisationAddress,
-        //         ResponsiblePersonName = organisationDetails.ResponsiblePersonName,
-        //         ResponsiblePersonEmail = organisationDetails.ResponsiblePersonEmail,
-        //         PhotoId = organisationDetails.PhotoId,
-        //         ProofOfAddress = organisationDetails.ProofOfAddress,
-        //         LetterOfAuthority = organisationDetails.LetterOfAuthority
-        //     };
-        //     
-        //     return View(nameof(OrganisationDetails), model);
-        // }
         
-        // TODO: Reenable new user functionality
-        // [HttpGet]
-        // public async Task<IActionResult> UsersDetails()
-        // {
-        //     var organisationId = HttpContext.Request.Query["organisationId"];
-        //
-        //     var organisationDetails = await _getOrganisationDetailsService.Get(new GetOrganisationDetailsRequest()
-        //     {
-        //         OrganisationId = organisationId
-        //     }, CancellationToken.None);
-        //
-        //     var model = new OrganisationDetailsViewModel()
-        //     {
-        //         OrganisationId = organisationId,
-        //         OrganisationName = organisationDetails.OrganisationName,
-        //         ResponsiblePersonName = organisationDetails.ResponsiblePersonName,
-        //         OrganisationUsers = new List<UserModel>()
-        //     };
-        //     
-        //     return View(nameof(UsersDetails), model);
-        // }
+        [HttpGet]
+        public async Task<IActionResult> OrganisationDetails()
+        {
+            var organisationId = HttpContext.Request.Query["organisationId"];
+            
+            var organisationDetails = await GetCurrentOrganisationDetails(organisationId);
+        
+            var model = new OrganisationDetailsViewModel()
+            {
+                OrganisationId = organisationId,
+                OrganisationType = organisationDetails.OrganisationType,
+                OrganisationName = organisationDetails.OrganisationName,
+                OrganisationAddress = organisationDetails.OrganisationAddress,
+                ResponsiblePersonName = organisationDetails.ResponsiblePersonName,
+                ResponsiblePersonEmail = organisationDetails.ResponsiblePersonEmail,
+                PhotoId = organisationDetails.PhotoId,
+                ProofOfAddress = organisationDetails.ProofOfAddress,
+                LetterOfAuthority = organisationDetails.LetterOfAuthority,
+                IsAuthorisedSignatory = organisationDetails.IsAuthorisedSignatory
+            };
+            
+            return View(nameof(OrganisationDetails), model);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> UsersDetails()
+        {
+            var organisationId = HttpContext.Request.Query["organisationId"];
+            
+            var organisationDetails = await GetCurrentOrganisationDetails(organisationId);
+        
+            var model = new OrganisationDetailsViewModel()
+            {
+                OrganisationId = organisationId,
+                OrganisationName = organisationDetails.OrganisationName,
+                ResponsiblePersonName = organisationDetails.ResponsiblePersonName,
+                ResponsiblePersonSurname = organisationDetails.ResponsiblePersonSurname,
+                OrganisationUsers = organisationDetails.OrganisationUsers,
+                IsAuthorisedSignatory = organisationDetails.IsAuthorisedSignatory
+            };
+            
+            return View(nameof(UsersDetails), model);
+        }
 
         [HttpGet]
         public async Task<IActionResult> InviteUser()
         {
-            var organisationId = HttpContext.Request.Query["OrganisationId"];
-
-            var organisationDetails = await _getOrganisationDetailsService.Get(new GetOrganisationDetailsRequest()
-            {
-                OrganisationId = organisationId
-            }, CancellationToken.None);
+            var organisationId = HttpContext.Request.Query["organisationId"];
+            
+            var organisationDetails = await GetCurrentOrganisationDetails(organisationId);
 
             var model = new InvitationsViewModel()
             {
+                OrganisationId = organisationId,
                 OrganisationName = organisationDetails.OrganisationName,
+                IsAuthorisedSignatory = organisationDetails.IsAuthorisedSignatory,
+                OrganisationUsers = organisationDetails.OrganisationUsers,
                 BackAction = $"dashboard/users-details{organisationId}"
             };
+
+            if (!model.IsAuthorisedSignatory)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             return View(nameof(InviteUser), model);
         }
 
         [HttpPost]
-        public IActionResult InviteUser([FromForm] InvitationsViewModel model)
+        public async Task<IActionResult> InviteUser([FromForm] InvitationsViewModel model)
         {
-            var organisationId = HttpContext.Request.Query["OrganisationId"];
 
             if (ModelState.GetFieldValidationState(nameof(model.UserEmail)) == ModelValidationState.Invalid)
             {
-                model.BackAction = $"dashboard/users-details{organisationId}";
+                model.BackAction = $"dashboard/users-details{model.OrganisationId}";
 
                 return View(nameof(InviteUser), model);
+            }
+            
+            var response = await _inviteUserToOrganisationService.Invite(new InviteUserToOrganisationRequest()
+            {
+                OrganisationId = model.OrganisationId,
+                UserEmail = model.UserEmail
+            }, CancellationToken.None);
+            
+            switch (response.InvitationResult)
+            {
+                case "USER_ADDED":
+                {
+                    var emailParameter = new EmailParameterBuilder(EmailTemplateIds.ExistingAdminUser, model.UserEmail, _sendEmailConfig.Value.ReplyToId)
+                        .AddCustom("organisationName", model.OrganisationName)
+                        .Build();
+                
+                    await _sendEmailService.Send(emailParameter, CancellationToken.None);
+                    break;
+                }
+                case "USER_NEEDS_TO_REGISTER":
+                {
+                    var signUpUrl = _configuration.GetValue<string>("AzureAdB2C:SignUpUrl");
+                    var registrationLink =
+                        $"{signUpUrl}&state={response.InvitationId}";
+                
+                    var emailParameter = new EmailParameterBuilder(EmailTemplateIds.NewAdminUser, model.UserEmail, _sendEmailConfig.Value.ReplyToId)
+                        .AddCustom("organisationName", model.OrganisationName)
+                        .AddCustom("registrationLink", registrationLink)
+                        .Build();
+                
+                    await _sendEmailService.Send(emailParameter, CancellationToken.None);
+                    break;
+                }
             }
 
             return RedirectToAction(nameof(EmailConfirmation), model);
@@ -239,6 +285,20 @@ namespace ExternalPortal.Controllers
             }
 
             return organisationList;
+        }
+
+        private async Task<GetOrganisationDetailsResponse> GetCurrentOrganisationDetails(string organisationId)
+        {
+            var currentUser = await _getUserByProviderIdService.Get(new GetUserRequest()
+            {
+                ProviderId = UserId.ToString()
+            });
+            
+            return await _getOrganisationDetailsService.Get(new GetOrganisationDetailsRequest()
+            {
+                OrganisationId = organisationId,
+                UserId = currentUser.UserId
+            }, CancellationToken.None);
         }
     }
 }

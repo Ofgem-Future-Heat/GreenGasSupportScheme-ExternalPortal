@@ -12,7 +12,6 @@ $govuk-footer-background: govuk-colour("light-grey");
         }
 
         &:focus {
-            background-color: $govuk-footer-background;
             border-bottom-color: $govuk-footer-background;
             box-shadow: 0 -2px $govuk-footer-background, 0 4px $govuk-footer-background;
         }

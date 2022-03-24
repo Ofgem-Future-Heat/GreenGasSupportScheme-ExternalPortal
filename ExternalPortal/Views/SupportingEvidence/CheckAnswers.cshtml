@@ -1,0 +1,78 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model ExternalPortal.ViewModels.Tasks.AdditionalFinancialEvidenceModel
+@{
+    ViewData["Title"] = "Check your answers";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+
+    var applicationId = Context.Request.Query["ApplicationId"];
+}
+
+@using (Html.BeginForm("SubmitYourAnswers", "SupportingEvidence", new { ApplicationId = applicationId }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            <h1 class="govuk-heading-l">Check your answers</h1>
+
+            <h2 class="govuk-heading-m">Add additional evidence</h2>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Add additional evidence
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.AddEvidence
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@UrlKeys.SupportingEvidenceAdd?ApplicationId=@applicationId">
+                        Change<span class="govuk-visually-hidden"> add additional evidence</span>
+                    </a>
+                </dd>
+        </div>
+        </dl>
+
+        @{ if (Model.HasDocuments)
+            {
+                <h2 class="govuk-heading-m">Additional evidence documents</h2>
+
+                <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                    @foreach (var doc in Model.Documents)
+                    {
+                        <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            @doc.Reference
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <a href="@UrlKeys.DocumentDownload/@doc.DocumentId?ApplicationId=@applicationId">
+                                @doc.Filename
+                            </a>, (@doc.FileSizeAsString)
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="@UrlKeys.SupportingEvidenceAddMore?ApplicationId=@applicationId">
+                                Change<span class="govuk-visually-hidden"> @doc.Reference document</span>
+                            </a>
+                        </dd>
+                        </div>
+                    }
+                </dl>
+            }
+        }
+
+        </div>
+        </div>
+
+        <div class="govuk-button-group">
+            @await Html.GovUkButton(new ButtonViewModel { Text = "Save and continue" })
+        </div>
+    }
+
+@{
+    await Html.RenderPartialAsync("Components/ViewReturnToApplicationLink", applicationId);
+}

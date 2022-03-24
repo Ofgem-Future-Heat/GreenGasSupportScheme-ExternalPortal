@@ -11,7 +11,7 @@ ENV PAT ${PAT}
 
 RUN apk update && apk add bash
 
-RUN apk update && apk add -q wget gnupg 
+RUN apk update && apk add -q wget gnupg && apk add --update curl
 
 RUN wget -qO- https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | bash
 ENV NUGET_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED true
@@ -21,7 +21,7 @@ COPY ["nuget.config", "."]
 COPY ["ExternalPortal/ExternalPortal.csproj", "ExternalPortal/"]
 
 # Restore project
-RUN dotnet restore "ExternalPortal/ExternalPortal.csproj" -s "https://pkgs.dev.azure.com/Ofgem-eServe/_packaging/Ofgem-eServe/nuget/v3/index.json" -s "https://api.nuget.org/v3/index.json"
+RUN dotnet restore "ExternalPortal/ExternalPortal.csproj"
 
 # Copy restored project
 COPY . .

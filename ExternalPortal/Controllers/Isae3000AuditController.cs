@@ -132,12 +132,12 @@ namespace ExternalPortal.Controllers
                 return RedirectToAction(nameof(Upload));
             }
 
-            return RedirectToAction(nameof(CheckYourAnswers));
+            return RedirectToAction(nameof(CheckAnswers));
         }
 
         [HttpGet]
         [Route(UrlKeys.Isae3000CheckYourAnswers)]
-        public async Task<IActionResult> CheckYourAnswers()
+        public async Task<IActionResult> CheckAnswers()
         {
             var application = await RetrieveCurrentApplicationFromApi();
 
@@ -148,7 +148,7 @@ namespace ExternalPortal.Controllers
                 FileSizeAsString = application.StageTwo.Isae3000.Document.FileSizeAsString
             };
 
-            return View(nameof(CheckYourAnswers), model);
+            return View(nameof(CheckAnswers), model);
         }
 
         [HttpPost]

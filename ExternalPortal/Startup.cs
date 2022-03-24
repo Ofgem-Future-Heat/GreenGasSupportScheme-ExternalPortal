@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -33,18 +34,30 @@ namespace ExternalPortal
 {
     public class Startup
     {
+        private IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
             Environment = environment;
         }
 
-        public IConfiguration Configuration { get; }
-        public IWebHostEnvironment Environment { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(provider =>
+            {
+                var service = provider.GetRequiredService<ILogger<StartupLogger>>();
+                return new StartupLogger(service);
+            });
+            
+#pragma warning disable ASP0000
+            // Logging services can NOT be injected in Core 3.1 into ConfigureServices
+            var logger = services.BuildServiceProvider().GetRequiredService<StartupLogger>();
+#pragma warning restore ASP0000
+            
+            logger.Log("Startup.ConfigureServices called");
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -68,11 +81,11 @@ namespace ExternalPortal
                         {
                             var token = new JsonWebToken(context.Request.Form["id_token"]);
 
-                            var userExists = await CheckUserExists(context, token);
+                            var userExists = await CheckUserExists(logger, context, token);
 
                             if (!userExists)
                             {
-                                await PersistUser(context, token);
+                                await PersistUser(logger, context, token);
                             }
                         }
                     },
@@ -190,6 +203,14 @@ namespace ExternalPortal
 
             app.UseStaticFiles();
 
+            app.UseReferrerPolicy(options => options.SameOrigin());
+
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+
+            app.UseXfo(xfo => xfo.Deny());
+
+            app.UseXContentTypeOptions(); 
+
             app.UseAuthentication();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -205,6 +226,7 @@ namespace ExternalPortal
                     pattern: "{controller:slugify}/{action:slugify}/{id:slugify?}",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
         }
 
         public class CustomTelemetryInitialiser : ITelemetryInitializer
@@ -216,23 +238,42 @@ namespace ExternalPortal
             }
         }
         
-        private static async Task<bool> CheckUserExists(MessageReceivedContext context, JsonWebToken token)
+        private static async Task<bool> CheckUserExists(StartupLogger logger, MessageReceivedContext context, JsonWebToken token)
         {
+            logger.Log($"Token claims: {string.Join(", ", token.Claims)}");
+            
+            var emailAddress = token.Claims.SingleOrDefault(claim => claim.Type == "email")?.Value
+                               ?? token.Claims.SingleOrDefault(claim => claim.Type == "signInNames.emailAddress")
+                                   ?.Value;
+            
+            logger.Log($"Email address: {emailAddress}");
+            
             var getUserByProviderId = context.HttpContext.RequestServices.GetService<IGetUserByProviderIdService>();
+            
             var user = await getUserByProviderId.Get(new GetUserRequest { ProviderId = token.Subject });
+            
             return user.Found;
         }
         
-        private static async Task PersistUser(MessageReceivedContext context, JsonWebToken token)
+        private static async Task PersistUser(StartupLogger logger, MessageReceivedContext context, JsonWebToken token)
         {
+            logger.Log($"Token claims: {string.Join(", ", token.Claims)}");
+
+            var emailAddress = token.Claims.SingleOrDefault(claim => claim.Type == "email")?.Value
+                               ?? token.Claims.SingleOrDefault(claim => claim.Type == "signInNames.emailAddress")
+                                   ?.Value;
+            
+            logger.Log($"Email address: {emailAddress}");
+            
             var addUser = context.HttpContext.RequestServices.GetService<IAddUserService>();
+            
             await addUser.Add(new AddUserRequest()
             {
+                InvitationId = context.Request.Form.ContainsKey("state") ? context.Request.Form["state"].ToString() : null,
                 ProviderId = token.Subject,
-                Email = token.Claims.SingleOrDefault(Claim => Claim.Type == ClaimTypes.Email)?.Value
-                        ?? token.Claims.SingleOrDefault(Claim => Claim.Type == "signInNames.emailAddress")?.Value,
-                Name = token.Claims.SingleOrDefault(Claim => Claim.Type == "given_name")?.Value,
-                Surname = token.Claims.SingleOrDefault(Claim => Claim.Type == "family_name")?.Value
+                Email = emailAddress,
+                Name = token.Claims.SingleOrDefault(claim => claim.Type == "given_name")?.Value,
+                Surname = token.Claims.SingleOrDefault(claim => claim.Type == "family_name")?.Value
             }, CancellationToken.None);
         }
     }

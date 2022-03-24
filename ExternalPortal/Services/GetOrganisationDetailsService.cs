@@ -22,15 +22,13 @@ namespace ExternalPortal.Services
         public GetOrganisationDetailsService(HttpClient client)
         {
             _client = client;
-            _client.DefaultRequestHeaders.Authorization
-                = new AuthenticationHeaderValue("Bearer", @"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMyNmZhOTc0LTdjMDUtNGIzNy1hOGU0LTZkNWZlNmRlYjYzYiIsIm5iZiI6MTYyNzQ4MDk1MywiZXhwIjoxNjU5MDE2OTUzLCJpYXQiOjE2Mjc0ODA5NTN9.pYB3Bi65_NFCulqYdbJdhUraONb4lH__Gs9YoZbiLZM"); 
         }
         
         public async Task<GetOrganisationDetailsResponse> Get(GetOrganisationDetailsRequest getOrganisationDetailsRequest, CancellationToken cancellationToken)
         {
             var response = new GetOrganisationDetailsResponse();
             
-            var serviceResponse = await _client.GetAsync($"Organisation/{getOrganisationDetailsRequest.OrganisationId}/details");
+            var serviceResponse = await _client.GetAsync($"Organisation/{getOrganisationDetailsRequest.OrganisationId}/details?userId={getOrganisationDetailsRequest.UserId}");
 
             if (!serviceResponse.IsSuccessStatusCode)
             {
@@ -51,16 +49,18 @@ namespace ExternalPortal.Services
         public string OrganisationName { get; set; }
         public AddressModel OrganisationAddress { get; set; }
         public string ResponsiblePersonName { get; set; }
+        public string ResponsiblePersonSurname { get; set; }
         public string ResponsiblePersonEmail { get; set; }
         public DocumentValue PhotoId { get; set; }
         public DocumentValue ProofOfAddress { get; set; }
         public DocumentValue LetterOfAuthority { get; set; }
-        public List<UserModel> OrganisationUsers { get; set; }
-
+        public List<UserValue> OrganisationUsers { get; set; }
+        public bool IsAuthorisedSignatory { get; set; }
     }
 
     public class GetOrganisationDetailsRequest
     {
         public string OrganisationId { get; set; }
+        public string UserId { get; set; }
     }
 }

@@ -5,6 +5,12 @@
 
 @{
     ViewData["Title"] = "Provide a proof of address";
+
+    if (Model.HasErrors) 
+    {
+        Model.InPageLink = "#file";
+        await Html.RenderPartialAsync("_ErrorPartial", Model);
+    } 
     await Html.RenderPartialAsync("Components/ViewBackLink");
 
     var formError = String.IsNullOrEmpty(Model.Model.Value.Error) ? "" : "govuk-form-group--error";

@@ -143,6 +143,11 @@ namespace ExternalPortal.Controllers
                 ModelState.AddModelError(nameof(viewModel.DateOfBirth), "Minimum age must 18 years");
                 return View(nameof(DateOfBirth), viewModel);
             }
+            if (!DateTimeHelper.IsValidYear((DateTime)viewModel.DateOfBirth))
+            {
+                ModelState.AddModelError(nameof(viewModel.DateOfBirth), "Year must be 4 digits");
+                return View(nameof(DateOfBirth), viewModel);
+            }
 
             var organisationModel = await RedisCache.GetOrgRegistrationAsync(UserId, token);
 

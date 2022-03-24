@@ -10,5 +10,10 @@ namespace ExternalPortal.Helpers
         {
             return dateOfBirth < DateTime.Now.AddYears(-minimumDateOfBirthAge);
         }
+
+        public static bool IsValidYear(DateTime date)
+        {
+            return date.Year.ToString().Length == 4;
+        }
     }
 }

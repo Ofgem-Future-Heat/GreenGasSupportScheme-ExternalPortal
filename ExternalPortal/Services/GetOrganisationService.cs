@@ -19,9 +19,7 @@ namespace ExternalPortal.Services
 
         public GetOrganisationService(HttpClient client)
         {
-            _client = client;
-            _client.DefaultRequestHeaders.Authorization
-                = new AuthenticationHeaderValue("Bearer", @"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMyNmZhOTc0LTdjMDUtNGIzNy1hOGU0LTZkNWZlNmRlYjYzYiIsIm5iZiI6MTYyNzQ4MDk1MywiZXhwIjoxNjU5MDE2OTUzLCJpYXQiOjE2Mjc0ODA5NTN9.pYB3Bi65_NFCulqYdbJdhUraONb4lH__Gs9YoZbiLZM"); 
+            _client = client; 
         }
         
         public async Task<GetOrganisationResponse> Get(GetOrganisationRequest getOrganisationRequest, CancellationToken none)

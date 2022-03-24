@@ -97,7 +97,7 @@ namespace ExternalPortal.Controllers
 
                 await PersistApplicationToApi(application);
                 
-                return RedirectToAction(nameof(CheckYourAnswers));
+                return RedirectToAction(nameof(CheckAnswers));
             }
 
             return RedirectToAction(nameof(Upload));
@@ -269,7 +269,7 @@ namespace ExternalPortal.Controllers
 
             if (IsOptionNo(option))
             {
-                return RedirectToAction(nameof(CheckYourAnswers));
+                return RedirectToAction(nameof(CheckAnswers));
             }
 
             return RedirectToAction(nameof(Upload));
@@ -277,13 +277,13 @@ namespace ExternalPortal.Controllers
 
         [HttpGet]
         [Route(UrlKeys.SupportingEvidenceCheckYourAnswers)]
-        public async Task<IActionResult> CheckYourAnswers()
+        public async Task<IActionResult> CheckAnswers()
         {
             var application = await RetrieveCurrentApplicationFromApi();
 
             var model = GetAdditionalFinancialEvidenceModel(application);
 
-            return View(nameof(CheckYourAnswers), model);
+            return View(nameof(CheckAnswers), model);
         }
 
         [HttpGet]

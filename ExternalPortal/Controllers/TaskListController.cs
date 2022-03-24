@@ -20,17 +20,20 @@ namespace ExternalPortal.Controllers
         private readonly IAzureRedisStore<InstallationModel> _redisStore;
         private readonly IGetApplicationService _getApplicationService;
         private readonly IUpdateApplicationService _updateApplicationService;
+        private readonly IGetUserByProviderIdService _getUserByProviderIdService;
 
         public TaskListController(
             IRedisCacheService redisCache,
             IAzureRedisStore<InstallationModel> redisStore,
             IGetApplicationService getApplicationService,
-            IUpdateApplicationService updateApplicationService)
+            IUpdateApplicationService updateApplicationService,
+            IGetUserByProviderIdService getUserByProviderIdService)
             : base(redisCache)
         {
             _redisStore = redisStore ?? throw new ArgumentNullException(nameof(redisStore));
             _getApplicationService = getApplicationService;
             _updateApplicationService = updateApplicationService;
+            _getUserByProviderIdService = getUserByProviderIdService;
         }
 
         #region FLOW
@@ -148,18 +151,23 @@ namespace ExternalPortal.Controllers
             var applicationSummary = new TaskListViewModel();
 
             applicationSummary.InitTaskItems();
-            
-            var persistedApplication = await _getApplicationService.Get(new GetApplicationRequest()
+
+            var currentUser = await _getUserByProviderIdService.Get(new GetUserRequest()
             {
-                ApplicationId = CurrentPersistedApplicationId.ToString()
+                ProviderId = UserId.ToString()
+            });
+            
+            var persistedApplication = await _getApplicationService.RetrieveApplication(new GetApplicationRequest()
+            {
+                ApplicationId = CurrentPersistedApplicationId.ToString(),
+                userId = currentUser.UserId
             }, token);
+            
 
             applicationSummary.StageOneApproved = persistedApplication.Application.Status == ApplicationStatus.StageOneApproved;
 
             applicationSummary.StageTwoApproved = persistedApplication.Application.Status == ApplicationStatus.StageTwoApproved;
-
-            applicationSummary.ApplicationProgress = persistedApplication.Application.Status.GetStatusInt();
-
+            
             applicationSummary.ApplicationId = CurrentPersistedApplicationId;
 
             applicationSummary.StageOneTasks().Find(t => t.TaskType == TaskType.PlantDetails).Status =
@@ -183,6 +191,10 @@ namespace ExternalPortal.Controllers
             applicationSummary.StageThreeTasks().Find(t => t.TaskType == TaskType.FeedstockDetails).Status =
                 Enum.Parse<TaskStatus>(persistedApplication.Application.StageThree.FeedstockDetails.Status);
 
+            applicationSummary.CanSubmit = persistedApplication.Application.CanSubmit;
+
+            applicationSummary.Status = persistedApplication.Application.Status.ToString();
+
             return View(applicationSummary);
         }
         
@@ -191,12 +203,20 @@ namespace ExternalPortal.Controllers
         {
             var persistedApplication = await RetrieveApplicationFromApi(token);
 
-            persistedApplication.Status = ApplicationStatus.StageOneSubmitted;
-            
             persistedApplication.StageOne.TellUsAboutYourSite.Status = TaskStatus.Submitted.ToString();
             persistedApplication.StageOne.ProvidePlanningPermission.Status = TaskStatus.Submitted.ToString();
             persistedApplication.StageOne.ProductionDetails.Status = TaskStatus.Submitted.ToString();
-            
+
+            if (IsStageOneFirstSubmission(persistedApplication))
+            {
+                persistedApplication.Status = ApplicationStatus.StageOneSubmitted;
+                persistedApplication.StageOne.FirstSubmissionDateTime = DateTime.Now.ToString("s");
+            }
+            else
+            {
+                persistedApplication.Status = ApplicationStatus.StageOneInReview;
+            }
+
             persistedApplication.StageTwo.Isae3000.Status = TaskStatus.NotStarted.ToString();
             persistedApplication.StageTwo.AdditionalSupportingEvidence.Status = TaskStatus.NotStarted.ToString();
 
@@ -209,10 +229,19 @@ namespace ExternalPortal.Controllers
         public async Task<IActionResult> SaveStageTwo(CancellationToken token)
         {
             var persistedApplication = await RetrieveApplicationFromApi(token);
-
-            persistedApplication.Status = ApplicationStatus.StageTwoSubmitted;
+            
             persistedApplication.StageTwo.Isae3000.Status = TaskStatus.Submitted.ToString();
             persistedApplication.StageTwo.AdditionalSupportingEvidence.Status = TaskStatus.Submitted.ToString();
+
+            if (IsStageTwoFirstSubmission(persistedApplication))
+            {
+                persistedApplication.Status = ApplicationStatus.StageTwoSubmitted;
+                persistedApplication.StageTwo.FirstSubmissionDateTime = DateTime.Now.ToString("s");
+            }
+            else
+            {
+                persistedApplication.Status = ApplicationStatus.StageTwoInReview;
+            }
 
             await PersistApplicationToApi(persistedApplication, token);
             
@@ -255,11 +284,20 @@ namespace ExternalPortal.Controllers
 
         private async Task<ApplicationValue> RetrieveApplicationFromApi(CancellationToken token)
         {
-            return (await _getApplicationService.Get(new GetApplicationRequest()
+            return (await _getApplicationService.RetrieveApplication(new GetApplicationRequest()
             {
                 ApplicationId = CurrentPersistedApplicationId.ToString()
             }, token)).Application;
         }
-
+        
+        private static bool IsStageOneFirstSubmission(ApplicationValue persistedApplication)
+        {
+            return string.IsNullOrWhiteSpace(persistedApplication.StageOne.FirstSubmissionDateTime);
+        }
+        
+        private static bool IsStageTwoFirstSubmission(ApplicationValue persistedApplication)
+        {
+            return string.IsNullOrWhiteSpace(persistedApplication.StageTwo.FirstSubmissionDateTime);
+        }
     }
 }

@@ -259,7 +259,7 @@ namespace ExternalPortal.Controllers
 
         private async Task<ApplicationValue> RetrieveCurrentApplicationFromApi()
         {
-            var response = await _getApplicationService.Get(new GetApplicationRequest()
+            var response = await _getApplicationService.RetrieveApplication(new GetApplicationRequest()
             {
                 ApplicationId = CurrentPersistedApplicationId.ToString(),
             }, CancellationToken.None);

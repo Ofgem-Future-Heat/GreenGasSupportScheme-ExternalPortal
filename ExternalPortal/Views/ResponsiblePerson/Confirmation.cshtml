@@ -2,7 +2,7 @@
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @model ExternalPortal.ViewModels.ResponsiblePersonDetailViewModel
 @{
-    ViewData["Title"] = "Responsible Person Details";
+    ViewData["Title"] = "Authorised Signatory Details";
 }
 
 @using (Html.BeginForm("Confirmation", "ResponsiblePerson", FormMethod.Post))
@@ -21,12 +21,12 @@
 
         <h1 class="govuk-heading-xl">
             <span class="govuk-caption-l">Register a new organisation</span>
-            Responsible Person Details
+            Authorised Signatory Details
         </h1>
 
         <div class="govuk-form-group">
             <div class="govuk-!-margin-bottom-9 govuk-!-margin-top-4">
-                <h2 class="govuk-heading-l  govuk-!-margin-bottom-2">Responsible Person</h2>
+                <h2 class="govuk-heading-l  govuk-!-margin-bottom-2">Authorised Signatory</h2>
 
                 @if (!string.IsNullOrEmpty(Model.EmailAddress))
                 {

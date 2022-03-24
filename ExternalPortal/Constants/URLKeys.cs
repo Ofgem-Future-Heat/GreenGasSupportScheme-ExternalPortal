@@ -21,15 +21,18 @@
         public const string PlantNameLink = "/apply/plant/name";
         public const string PlantAddressLink = "/apply/plant/address";
         public const string InjectionPointAddressLink = "/apply/plant/injection-point-location";
+        public const string HasPostcodeLink = "/tell-us-about-your-site/plant-postcode";
         public const string EquipmentDescriptionLink = "/tell-us-about-your-site/Equipment-description";
         public const string CapacityUploadLink = "/apply/capacity/upload";
         public const string CapacityUploadConfirmLink = "/apply/capacity/upload/check";
         public const string PlantDetailsCheckAnswersLink = "/tell-us-about-your-site/check-answers";
+        public const string LatLongAnaerobicLink = "/apply/plant/latitude-longitude-anaerobic";
+        public const string LatLongInjectionLink = "/apply/plant/latitude-longitude-injection";
 
         public const string PlanningPermissionWhatYouWillNeed = "/apply/planning-permission";
         public const string PlanningPermissionDoYouHave = "/apply/planning-permission/needed";
         public const string PlanningPermissionUploadLink = "/apply/planning-permission/upload";
-        public const string PlanningPermissionUploadConfirmLink = "apply/planning-permission/upload/check";
+        public const string PlanningPermissionUploadConfirmLink = "/apply/planning-permission/upload/check";
         public const string PlanningExemptUploadLink = "/apply/planning-permission/exempt-upload";
         public const string PlanningPermissionCheckYourAnswers = "/planning-permission/check-answers";
 
@@ -68,6 +71,5 @@
 
         public const string DocumentDownload = "/application-document/download/";
         public const string DocumentDownloadFullPath = "/application-document/download/{containerName}/{blobName}";
-
     }
 }

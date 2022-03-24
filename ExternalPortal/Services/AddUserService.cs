@@ -35,6 +35,7 @@ namespace ExternalPortal.Services
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
+        public string InvitationId { get; set; }
     }
 
     public class AddUserResponse

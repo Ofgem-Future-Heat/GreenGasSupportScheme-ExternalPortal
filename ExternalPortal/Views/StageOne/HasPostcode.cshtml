@@ -1,0 +1,62 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model ExternalPortal.ViewModels.PlantDetailsModel
+
+@{
+    ViewData["Title"] = "Do you have postcodes for the anaerobic digester and injection point? - Tell us about your site - Green Gas Support Scheme";
+
+    var formError = Model.HasError() ? "govuk-form-group--error" : "";
+
+    await Html.RenderPartialAsync("Components/ViewBackLink");
+}
+
+@using (Html.BeginForm("HasPostcode", "StageOne", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="govuk-form-group @formError">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Do you have postcodes for the anaerobic digester and injection point?
+                </h1>
+            </legend>
+            
+            @{
+                if (Model.HasError())
+                {
+                    <span id="" class="govuk-error-message">
+                        @Model.Error
+                    </span>
+                }
+            }
+                  
+            <div class="govuk-radios govuk-radios--inline">
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input " id="postcode-yes" name="hasPostcode" type="radio" value="Yes">
+                    <label class="govuk-label govuk-radios__label" for="postcode-yes">
+                        Yes
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input " id="postcode-no" name="hasPostcode" type="radio" value="No">
+                    <label class="govuk-label govuk-radios__label" for="postcode-no">
+                        No
+                    </label>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.ReturnUrl)
+        </fieldset>
+        <div class="govuk-button-group">
+            @await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Save and continue",
+                Type = "submit"
+            })
+            @if (Model.BackLink != null)
+            {
+                await Html.RenderPartialAsync("Components/ReturnToYourApplication", Model.BackLink);
+            }
+        </div>
+    </div>
+}

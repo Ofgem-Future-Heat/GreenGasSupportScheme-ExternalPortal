@@ -10,13 +10,13 @@ namespace ExternalPortal.ViewModels
 {
     public class ResponsiblePersonDetailViewModel : SimplePageHeaderLayoutViewModel
     {
-        [GovUkValidateRequired(ErrorMessageIfMissing = "Enter responsible person first name")]
+        [GovUkValidateRequired(ErrorMessageIfMissing = "Enter authorised signatory first name")]
         public string FirstName { get; set; }
 
-        [GovUkValidateRequired(ErrorMessageIfMissing = "Enter enter responsible person surname")]
+        [GovUkValidateRequired(ErrorMessageIfMissing = "Enter authorised signatory surname")]
         public string Surname { get; set; }
 
-        [GovUkValidateRequired(ErrorMessageIfMissing = "Enter responsible person email address")]
+        [GovUkValidateRequired(ErrorMessageIfMissing = "Enter authorised signatory email address")]
         [ValidateEmail(ErrorMessage = "Please enter a valid email address in the correct format, like name@example.com")]
         public string EmailAddress { get; set; }
         

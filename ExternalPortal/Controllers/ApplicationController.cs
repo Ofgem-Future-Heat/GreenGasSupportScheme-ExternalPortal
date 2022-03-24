@@ -42,7 +42,7 @@ namespace ExternalPortal.Controllers
 
         protected async Task<ApplicationValue> RetrieveCurrentApplicationFromApi()
         {
-            var response = await _getApplicationService.Get(
+            var response = await _getApplicationService.RetrieveApplication(
                 new GetApplicationRequest()
                 {
                     ApplicationId = CurrentPersistedApplicationId

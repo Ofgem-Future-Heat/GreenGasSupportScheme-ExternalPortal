@@ -6,6 +6,12 @@
 @{
     ViewData["Title"] = "Letter of authorisation";
 
+    if (Model.HasErrors) 
+    {
+        Model.InPageLink = "#letterOfAuthorisation";
+        await Html.RenderPartialAsync("_ErrorPartial", Model);
+    } 
+
     await Html.RenderPartialAsync("Components/ViewBackLink");
 
     var formError = String.IsNullOrEmpty(Model.Model.Value.Error) ? "" : "govuk-form-group--error";
@@ -55,6 +61,11 @@
                     </label>
                     <input class="govuk-file-upload" id="letterOfAuthorisation" name="letterOfAuthorisation" type="file" aria-describedby="letter-of-authorisation">
                 </div>
+
+                <p class="govuk-body">
+                    You can only upload PDF, JPG, PNG, BMP, TIF, XLS or XLSX files. No file can be larger than 5MB.
+                </p>
+
                 @Html.HiddenFor(m => m.ReturnUrl)
             </fieldset>
 

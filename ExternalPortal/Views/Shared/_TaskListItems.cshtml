@@ -1,0 +1,29 @@
+@model dynamic
+
+@{
+    
+    foreach (var t in (List<TaskItemViewModel>)Model.Tasks)
+    {
+        <li class="app-task-list__item">
+            @if (!t.IsEditable(Model.PreviousStageIsApproved))
+            {
+                @t.DisplayName
+            }
+            else
+            {
+                if (t.IsCompleted())
+                {
+                    @Html.ActionLink(t.DisplayName, "CheckAnswers", t.ControllerName, new { ApplicationId = Model.AppId })
+                }
+                else
+                {
+                    @Html.ActionLink(t.DisplayName, t.StartActionName, t.ControllerName, new { ApplicationId = Model.AppId })
+                }
+            }
+
+            <strong class="govuk-tag app-task-list__tag @t.Status.GetDisplayTag()" id=@t.TaskType.ToString()>
+                @t.Status.GetDisplayName()
+            </strong>
+        </li>
+    }
+}

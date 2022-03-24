@@ -12,7 +12,7 @@ namespace ExternalPortal.Services
 {
     public interface IGetApplicationService
     {
-        Task<GetApplicationResponse> Get(GetApplicationRequest getApplicationRequest, CancellationToken none);
+        Task<GetApplicationResponse> RetrieveApplication(GetApplicationRequest getApplicationRequest, CancellationToken none);
     }
 
     public class GetApplicationService : IGetApplicationService
@@ -22,15 +22,15 @@ namespace ExternalPortal.Services
         public GetApplicationService(HttpClient client)
         {
             _client = client;
-            _client.DefaultRequestHeaders.Authorization
-                = new AuthenticationHeaderValue("Bearer", @"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMyNmZhOTc0LTdjMDUtNGIzNy1hOGU0LTZkNWZlNmRlYjYzYiIsIm5iZiI6MTYyNzQ4MDk1MywiZXhwIjoxNjU5MDE2OTUzLCJpYXQiOjE2Mjc0ODA5NTN9.pYB3Bi65_NFCulqYdbJdhUraONb4lH__Gs9YoZbiLZM");
         }
 
-        public async Task<GetApplicationResponse> Get(GetApplicationRequest getApplicationRequest, CancellationToken none)
+        public async Task<GetApplicationResponse> RetrieveApplication(GetApplicationRequest getApplicationRequest, CancellationToken none)
         {
             var response = new GetApplicationResponse();
             
-            var serviceResponse = await _client.GetAsync($"/Application/{getApplicationRequest.ApplicationId}");
+            var serviceResponse = await _client.GetAsync($"/Application/{getApplicationRequest.ApplicationId}?userId={getApplicationRequest.userId}");
+            
+            
 
             if (!serviceResponse.IsSuccessStatusCode)
             {
@@ -53,5 +53,7 @@ namespace ExternalPortal.Services
     public class GetApplicationRequest
     {
         public string ApplicationId { get; set; }
+
+        public string userId { get; set; }
     }
 }

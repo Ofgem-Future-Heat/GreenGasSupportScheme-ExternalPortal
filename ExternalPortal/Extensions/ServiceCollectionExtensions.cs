@@ -1,10 +1,15 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ExternalPortal.Configuration;
+using ExternalPortal.Extensions;
+using ExternalPortal.Models;
 using ExternalPortal.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Ofgem.API.GGSS.Domain.Contracts.Services;
+using Ofgem.GovUK.Notify.Client;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -15,7 +20,10 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection UseExternalServices(this IServiceCollection services, IConfiguration configuration, bool isDevelopment)
         {
             services.AddOptions();
+
             services.Configure<ServiceConfig>(o => configuration.GetSection("Services").Bind(o));
+
+            services.Configure<SendEmailConfig>(o => configuration.GetSection("SendEmail").Bind(o));
 
             var api = configuration.GetSection("Services:Api").Get<ApiConfig>();
 
@@ -41,19 +49,28 @@ namespace Microsoft.Extensions.DependencyInjection
             { client.BaseAddress = new Uri(api.CompaniesHouseApiBaseUri); })
                .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
-            services.AddHttpClient<ICreateApplicationService, CreateApplicationService>(client
+            services.AddHttpClient<ICreateApplicationService, CreateApplicationService>((provider, client)
                     =>
-                { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
+                {
+                    client.BaseAddress = new Uri(api.InternalApiBaseUri);
+                    SetBearerToken(provider, client);
+                })
             .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
-            services.AddHttpClient<IGetApplicationService, GetApplicationService>(client
-                        =>
-                    { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
+            services.AddHttpClient<IGetApplicationService, GetApplicationService>((provider, client)
+                    =>
+                {
+                    client.BaseAddress = new Uri(api.InternalApiBaseUri); 
+                    SetBearerToken(provider, client);
+                })
                 .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
-            services.AddHttpClient<IGetOrganisationService, GetOrganisationService>(client
-                        =>
-                    { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
+            services.AddHttpClient<IGetOrganisationService, GetOrganisationService>((provider, client)
+                    =>
+                {
+                    client.BaseAddress = new Uri(api.InternalApiBaseUri);
+                    SetBearerToken(provider, client);
+                })
                 .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
             
             services.AddHttpClient<IGetOrganisationDetailsService, GetOrganisationDetailsService>(client
@@ -61,21 +78,30 @@ namespace Microsoft.Extensions.DependencyInjection
                     { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
                 .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
-            services.AddHttpClient<IUpdateApplicationService, UpdateApplicationService>(client
-                        =>
-                    { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
+            services.AddHttpClient<IUpdateApplicationService, UpdateApplicationService>((provider, client)
+                    =>
+                {
+                    client.BaseAddress = new Uri(api.InternalApiBaseUri);
+                    SetBearerToken(provider, client);
+                })
                 .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
-            services.AddHttpClient<IApplicationService, ApplicationService>(client
-                =>
-            { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
+            services.AddHttpClient<IApplicationService, ApplicationService>((provider, client)
+                    =>
+                {
+                    client.BaseAddress = new Uri(api.InternalApiBaseUri);
+                    SetBearerToken(provider, client);
+                })
                 .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
             services.AddScoped<IResponsiblePersonService, ResponsiblePersonService>();
 
-            services.AddHttpClient<IGetOrganisationsForUserService, GetOrganisationsForUserService>(client
+            services.AddHttpClient<IGetOrganisationsForUserService, GetOrganisationsForUserService>((provider, client)
                     =>
-            { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
+                {
+                    client.BaseAddress = new Uri(api.InternalApiBaseUri);
+                    SetBearerToken(provider, client);
+                })
                 .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
             services.AddHttpClient<ISendEmailService, SendEmailService>(client
@@ -96,6 +122,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddHttpClient<IGetUserByProviderIdService, GetUserByProviderIdService>(client
                     => { client.BaseAddress = new Uri(api.InternalApiBaseUri); })
                 .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
+            
+            services.AddHttpClient<IInviteUserToOrganisationService, InviteUserToOrganisationService>((provider, client)
+                    =>
+                {
+                    client.BaseAddress = new Uri(api.InternalApiBaseUri);
+                    SetBearerToken(provider, client);
+                })
+                .AddPolicyHandler(GetRetryPolicy(api.RetryCount, api.RetryIntervalSeconds));
 
 
             if (isDevelopment)
@@ -106,6 +140,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddLogging();
 
             return services;
+        }
+
+        private static void SetBearerToken(IServiceProvider provider, HttpClient client)
+        {
+            var httpContextAccessor = provider.GetService<IHttpContextAccessor>();
+            var bearerTokenString = httpContextAccessor?.HttpContext?.User?.GetBearerTokenString();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerTokenString);
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int retryCount, double retryInterval)

@@ -6,6 +6,8 @@ using ExternalPortal.Models;
 using ExternalPortal.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Ofgem.GovUK.Notify.Client;
 
 namespace ExternalPortal.Controllers
 {
@@ -13,10 +15,12 @@ namespace ExternalPortal.Controllers
     public class NotificationsController : Controller
     {
         private readonly ISendEmailService _sendEmailService;
+        private readonly IOptions<SendEmailConfig> _sendEmailConfig;
 
-        public NotificationsController(ISendEmailService sendEmailService)
+        public NotificationsController(ISendEmailService sendEmailService, IOptions<SendEmailConfig> sendEmailConfig)
         {
             _sendEmailService = sendEmailService;
+            _sendEmailConfig = sendEmailConfig;
         }
 
         public IActionResult Index()
@@ -31,13 +35,13 @@ namespace ExternalPortal.Controllers
 
             try
             {
-                var emailParameter = new EmailParameterBuilder(EmailTemplateIds.OrganisationSubmitted, emailAddress)
+                var emailParameter = new EmailParameterBuilder(EmailTemplateIds.OrganisationSubmitted, emailAddress, _sendEmailConfig.Value.ReplyToId)
                     .AddFullName(fullName)
-                    .AddDashboardLink(Request.Scheme, Request.Host, Guid.NewGuid())
+                    .AddDashboardLink(Request.Scheme, Request.Host, Guid.NewGuid().ToString())
                     .AddCustom("ReferenceNumber", referenceNumber)
                     .Build();
 
-                await _sendEmailService.Send(emailParameter, token, true);
+                await _sendEmailService.Send(emailParameter, token);
 
                 ViewBag.StatusCode = 200;
                 ViewBag.Message = "Organisation submitted email sent";
@@ -58,13 +62,13 @@ namespace ExternalPortal.Controllers
 
             try
             {
-                var emailParameter = new EmailParameterBuilder(EmailTemplateIds.StageOneSubmitted, emailAddress)
+                var emailParameter = new EmailParameterBuilder(EmailTemplateIds.StageOneSubmitted, emailAddress, _sendEmailConfig.Value.ReplyToId)
                     .AddFullName(fullName)
-                    .AddApplicationId(Guid.NewGuid())
-                    .AddDashboardLink(Request.Scheme, Request.Host, Guid.NewGuid())
+                    .AddApplicationId(Guid.NewGuid().ToString())
+                    .AddDashboardLink(Request.Scheme, Request.Host, Guid.NewGuid().ToString())
                     .Build();
 
-                await _sendEmailService.Send(emailParameter, token, true);
+                await _sendEmailService.Send(emailParameter, token);
 
                 ViewBag.StatusCode = 200;
                 ViewBag.Message = "Stage one submitted email sent";

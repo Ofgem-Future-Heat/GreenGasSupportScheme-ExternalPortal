@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ExternalPortal.Constants;
 using ExternalPortal.Enums;
 using ExternalPortal.Extensions;
+using ExternalPortal.Helpers;
 using ExternalPortal.Services;
 using ExternalPortal.ViewModels;
 using ExternalPortal.ViewModels.ProductionDetails;
@@ -187,6 +188,11 @@ namespace ExternalPortal.Controllers
             
             var persistedApplication = await RetrieveCurrentApplicationFromApi();
 
+            if (viewModel.StartDate != null && !DateTimeHelper.IsValidYear((DateTime)viewModel.StartDate))
+            {
+                ModelState.AddModelError(nameof(viewModel.StartDate), "Year must be 4 digits");
+            }
+
             if (ModelState.IsValid)
             {
                 persistedApplication.StageOne.ProductionDetails.InjectionStartDate = (DateTime)viewModel.StartDate;
@@ -217,13 +223,13 @@ namespace ExternalPortal.Controllers
                 {
                     PropertyName = TaskPropertyName.MaximumInitialCapacityOfBiomethane,
                     PropertyValue = $"{application.StageOne.ProductionDetails.MaximumInitialCapacity} m\u00b3",
-                    ChangeLink = "production-details/production-details" + queryString
+                    ChangeLink = "/production-details/production-details" + queryString
                 },
                 new Answer
                 {
                     PropertyName = TaskPropertyName.EligibleBiomethane,
                     PropertyValue = $"{application.StageOne.ProductionDetails.EligibleBiomethane} m\u00b3",
-                    ChangeLink = "production-details/eligible-biomethane" + queryString
+                    ChangeLink = "/production-details/eligible-biomethane" + queryString
                 },
                 new Answer
                 {
@@ -250,7 +256,7 @@ namespace ExternalPortal.Controllers
 
         private async Task<ApplicationValue> RetrieveCurrentApplicationFromApi()
         {
-            var response = await _getApplicationService.Get(new GetApplicationRequest()
+            var response = await _getApplicationService.RetrieveApplication(new GetApplicationRequest()
             {
                 ApplicationId = CurrentPersistedApplicationId.ToString(),
             }, CancellationToken.None);
